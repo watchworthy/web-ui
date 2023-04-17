@@ -1,0 +1,45 @@
+.header {
+  position: fixed !important;
+  z-index: 10 !important;
+  top: 0 !important;
+  width: 100% !important;
+  height: 80px !important;
+  background: #111111;
+  padding: 0 100px;
+
+  .headerContent {
+    display: flex;
+    justify-content: space-between;
+
+    .fisrtWrapper {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      .menu {
+        color: #fff;
+        margin-right: 35px;
+        font-size: 20px;
+      }
+
+      .logo {
+        color: #fff;
+        font-weight: bold;
+        font-size: 18px;
+      }
+    }
+  }
+
+  .thirdWrapper {
+    display: flex;
+    gap: 40px;
+  }
+
+  @media screen {
+    @media (max-width: 900px) {
+      .search {
+        display: none;
+      }
+    }
+  }
+}
