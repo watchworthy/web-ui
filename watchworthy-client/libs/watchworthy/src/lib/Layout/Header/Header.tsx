@@ -47,7 +47,7 @@ export const Header = ({ toggleSidebar }: LayoutProps) => {
             <div className={styles.thirdWrapper}>
               <Link href="#">EN</Link>
               <Link href="/watchlist">Watch List</Link>
-              <Link href="/signin">Sign In</Link>
+              <Link href="/signup">Sign Up</Link>
             </div>
           </Col>
         </Row>
