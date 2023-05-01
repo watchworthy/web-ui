@@ -1,10 +1,13 @@
 import '@fontsource/lato';
 import { Inter } from '@next/font/google';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Layout } from '@watchworthy/ui';
 import { ConfigProvider } from 'antd';
 import { appWithTranslation } from 'next-i18next';
 import type { AppProps } from 'next/app';
+import { useState } from 'react';
 import '../styles/globals.css';
+import '../styles/Movie.scss';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -16,6 +19,7 @@ const inter = Inter({
 // TODO: Create a LoggedIn Barrier as a Parent Component to the Child Component
 
 const App = ({ Component, pageProps }: AppProps) => {
+  const [queryClient] = useState(() => new QueryClient());
   return (
     <main className={inter.className}>
       <ConfigProvider
@@ -25,9 +29,11 @@ const App = ({ Component, pageProps }: AppProps) => {
           },
         }}
       >
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
+        <QueryClientProvider client={queryClient}>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </QueryClientProvider>
       </ConfigProvider>
     </main>
   );

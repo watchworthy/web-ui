@@ -23,4 +23,7 @@ module.exports = withAntdLess({
   ...antdLessOptions,
   ...nextI18nOptions,
   ...nextConfig,
+  images: {
+    domains: ['www.themoviedb.org'],
+  },
 });
