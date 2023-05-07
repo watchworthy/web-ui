@@ -37,6 +37,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-i18next": "^12.2.0",
+    "react-router-dom": "^6.11.1",
     "sass": "^1.62.1",
     "typescript": "5.0.4"
   },
@@ -48,10 +49,14 @@
     "@storybook/nextjs": "7.0.2",
     "@storybook/react": "7.0.2",
     "@storybook/testing-library": "0.0.14-next.2",
+    "@types/jsonwebtoken": "^9.0.2",
     "cross-env": "^7.0.3",
     "eslint-plugin-storybook": "^0.6.11",
+    "formik": "^2.2.9",
+    "jsonwebtoken": "^9.0.0",
     "prettier": "^2.8.7",
-    "storybook": "7.0.2"
+    "storybook": "7.0.2",
+    "yup": "^1.1.1"
   },
   "resolutions": {
     "webpack": "^5"

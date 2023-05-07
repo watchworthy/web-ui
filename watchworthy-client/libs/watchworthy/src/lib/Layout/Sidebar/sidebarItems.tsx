@@ -14,7 +14,7 @@ export const sidebarMenu = [
   {
     label: 'Movies',
     icon: <VideoCameraOutlined />,
-    path: '/movies',
+    path: '/',
   },
   {
     label: 'TV Shows',
