@@ -1,5 +1,9 @@
+import { PeopleCard } from "@watchworthy/ui";
+
+
+
 export const People = () => {
-  return <h1>People</h1>;
+  return <PeopleCard />;
 };
 
 export default People;
