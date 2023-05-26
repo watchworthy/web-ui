@@ -1,8 +1,8 @@
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { MovieList, useUser } from '@watchworthy/ui';
 import { Pagination } from 'antd';
-import fetchCharacters from 'api/fetch-all-movies';
-import useCharactersQuery from 'hooks/use-all-movies-query';
+import fetchMovies from 'api/fetch-all-movies';
+import useMoviesQuery from 'hooks/use-all-movies-query';
 import useDebounce from 'hooks/use-debounce';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { ParsedUrlQuery } from 'querystring';
@@ -40,9 +40,7 @@ export const getServerSideProps: GetServerSideProps<{
   const page = getInitialPageFromQuery(ctx.query);
   const search = getInitialSearchFromQuery(ctx.query);
   const queryKey = ['movies', page, search];
-  await queryClient.prefetchQuery(queryKey, () =>
-    fetchCharacters(page, search)
-  );
+  await queryClient.prefetchQuery(queryKey, () => fetchMovies(page, search));
 
   const prefetchedQueryData = queryClient.getQueryData(queryKey);
 
@@ -72,7 +70,7 @@ export const Movies = ({
   const [search, setSearch] = useState(initialSearch);
   const user = useUser();
   const debouncedSearch = useDebounce(search, 500);
-  const { data, isLoading, isFetching, isError } = useCharactersQuery(
+  const { data, isLoading, isFetching, isError } = useMoviesQuery(
     page,
     debouncedSearch
   );
