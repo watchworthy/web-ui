@@ -12,3 +12,32 @@ export interface Info {
   page: number;
   data: Movie[];
 }
+
+export interface TvShow {
+  id: number;
+  title: string;
+  overview: string;
+  releaseDate: string;
+  posterPath: string;
+}
+
+export interface TvShowInfo {
+  total: number;
+  size: number;
+  page: number;
+  data: TvShow[];
+}
+
+export interface People {
+  id: number;
+  name: string;
+  gender: string;
+  posterPath: string;
+}
+
+export interface PeopleInfo {
+  total: number;
+  size: number;
+  page: number;
+  data: People[];
+}
