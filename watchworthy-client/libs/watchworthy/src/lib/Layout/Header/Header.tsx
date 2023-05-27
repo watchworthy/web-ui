@@ -8,7 +8,7 @@ import { useUser } from '@watchworthy/ui';
 import { Avatar, Col, Dropdown, Layout, MenuProps, Row, Space } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Search } from '../../Search/Search';
 import styles from './Header.module.less';
 
@@ -22,7 +22,9 @@ export const Header = ({ toggleSidebar }: LayoutProps) => {
   const [collapsed, setCollapsed] = useState(true);
   const user = useUser();
   const router = useRouter();
-
+  useEffect(() => {
+    console.log(user.user);
+  });
   const items: MenuProps['items'] = [
     {
       key: '1',
