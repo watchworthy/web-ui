@@ -1,13 +1,26 @@
-import { Col, Row } from 'antd';
+import { Button, Col, Row } from 'antd';
+import axios from 'axios';
 import moment from 'moment';
 import { Fragment } from 'react';
 import { Movie } from 'types/common';
+import { useUser } from '../hooks';
 
 interface MovieDetailsProps {
   movie: Movie;
 }
-
 const MovieDetails = ({ movie }: MovieDetailsProps) => {
+  const user = useUser();
+
+  const addToWatchList = (values: any) => {
+    const data = {
+      userId: user.user?.id,
+      movieId: movie.id,
+    };
+    axios.post(
+      `http://localhost:8081/movie/addtowatchlist/${user.user?.id}/${movie.id}`
+    );
+  };
+
   const genres = [
     {
       id: 1,
@@ -61,6 +74,7 @@ const MovieDetails = ({ movie }: MovieDetailsProps) => {
               </Fragment>
             </>
           </Col>
+          <Button onClick={addToWatchList}>AddToWatchList</Button>
         </Row>
       </div>
     </div>

@@ -5,6 +5,7 @@ interface User {
   email: string | undefined;
   exp: number | undefined;
   iat: number | undefined;
+  id: number | undefined;
 }
 
 export const useUser = () => {
@@ -16,8 +17,8 @@ export const useUser = () => {
     if (token) {
       const decodedToken = jwt.decode(token);
       if (decodedToken && typeof decodedToken !== 'string') {
-        const { sub: email, exp, iat } = decodedToken;
-        setUser({ email, exp, iat });
+        const { sub: email, exp, iat, id: id } = decodedToken;
+        setUser({ email, exp, iat, id });
       } else {
         setUser(null);
       }
