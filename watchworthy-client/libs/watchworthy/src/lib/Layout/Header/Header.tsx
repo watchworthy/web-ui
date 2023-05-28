@@ -29,8 +29,8 @@ export const Header = ({ toggleSidebar }: LayoutProps) => {
     {
       key: '1',
       label: (
-        <a rel="noopener noreferrer" href="#">
-          Account settings
+        <a rel="noopener noreferrer" href="/profile">
+          Profile Page
         </a>
       ),
     },
@@ -99,10 +99,12 @@ export const Header = ({ toggleSidebar }: LayoutProps) => {
                   <div style={{ color: '#fff' }}>{user.user?.email}</div>
                   <Dropdown menu={{ items }}>
                     <Space>
-                      <a>
-                        <Avatar size="large" icon={<UserOutlined />} />
-                        <DownOutlined />
-                      </a>
+                    
+                        <a>
+                          <Avatar size="large" icon={<UserOutlined />} />
+                          <DownOutlined />
+                        </a>
+                    
                     </Space>
                   </Dropdown>
                 </>
@@ -110,6 +112,11 @@ export const Header = ({ toggleSidebar }: LayoutProps) => {
                 <>
                   {<Link href="/register">Register</Link>}
                   {<Link href="/login">Login</Link>}
+                  {/* {
+                    <Link href="/profile"> 
+                          <Avatar size="large" icon={<UserOutlined />} />   
+                    </Link>
+                  } */}
                 </>
               )}
             </div>
