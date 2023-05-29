@@ -1,4 +1,4 @@
-import { Button, Col, Rate, Row, Slider } from 'antd';
+import { Button, Col, Rate, Row, Slider, message } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
 import { Fragment, useEffect, useState } from 'react';
@@ -11,14 +11,22 @@ interface MovieDetailsProps {
 const MovieDetails = ({ movie }: MovieDetailsProps) => {
   const user = useUser();
 
-  const addToWatchList = (values: any) => {
+  const addToWatchList = () => {
     const data = {
       userId: user.user?.id,
       movieId: movie.id,
     };
-    axios.post(
-      `http://localhost:8081/movie/addtowatchlist/${user.user?.id}/${movie.id}`
-    );
+
+    axios
+      .post(
+        `http://localhost:8081/movie/addtowatchlist/${user.user?.id}/${movie.id}`
+      )
+      .then(() => {
+        message.success('Movie added to watchlist successfully!');
+      })
+      .catch((error) => {
+        message.error('Error adding movie to watchlist:', error);
+      });
   };
 
   const [averageRating, setAverageRating] = useState(null);
@@ -66,8 +74,11 @@ const MovieDetails = ({ movie }: MovieDetailsProps) => {
         `http://localhost:8081/movierates/ratemovie/${movie.id}/${user.user?.id}?rateNum=${rateNum}`
       );
       console.log('Movie rated successfully');
+
       const userRating = response.data;
       setRateNum(userRating);
+
+      message.success('Movie rated successfully!');
       window.location.reload();
     } catch (error) {
       console.error('Error rating movie:', error);
