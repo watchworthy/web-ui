@@ -18,7 +18,7 @@ export const TvShowList = ({ data, isLoading }: TvShowListProps) => {
         {data.data.map((tvshow) => (
           <Col key={tvshow.id} xs={24} sm={12} md={8} lg={4}>
             <Card
-              onClick={() => router.push(`/tvshow/${tvshow.id}`)}
+              onClick={() => router.push(`/tvshows/${tvshow.id}`)}
               hoverable
               style={{ width: '100%', border: '#D9D9D9 solid 0.5px' }}
               cover={<img alt="example" src={tvshow.posterPath} />}

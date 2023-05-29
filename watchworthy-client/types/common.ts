@@ -3,7 +3,13 @@ export interface Movie {
   title: string;
   overview: string;
   releaseDate: string;
+  genres: Genre[];
   posterPath: string;
+}
+
+export interface Genre {
+  id: number;
+  name: string;
 }
 
 export interface Info {
@@ -32,6 +38,7 @@ export interface People {
   id: number;
   name: string;
   gender: string;
+  biography: string;
   posterPath: string;
 }
 
