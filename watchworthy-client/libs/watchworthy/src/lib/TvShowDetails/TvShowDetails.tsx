@@ -1,26 +1,12 @@
-import { Button, Col, Row } from 'antd';
-import axios from 'axios';
+import { Col, Row } from 'antd';
 import moment from 'moment';
 import { Fragment } from 'react';
-import { Movie } from 'types/common';
-import { useUser } from '../hooks';
+import { TvShow } from 'types/common';
 
-interface MovieDetailsProps {
-  movie: Movie;
+interface TvShowDetailsProps {
+  tvShow: TvShow;
 }
-const MovieDetails = ({ movie }: MovieDetailsProps) => {
-  const user = useUser();
-
-  const addToWatchList = (values: any) => {
-    const data = {
-      userId: user.user?.id,
-      movieId: movie.id,
-    };
-    axios.post(
-      `http://localhost:8081/movie/addtowatchlist/${user.user?.id}/${movie.id}`
-    );
-  };
-
+const TvShowDetails = ({ tvShow }: TvShowDetailsProps) => {
   const genres = [
     {
       id: 1,
@@ -37,14 +23,14 @@ const MovieDetails = ({ movie }: MovieDetailsProps) => {
       <div
         className="movie"
         style={{
-          backgroundImage: `url('${movie.posterPath}')`,
+          backgroundImage: `url('${tvShow.posterPath}')`,
         }}
       >
         <div className="movie__dark" />
         <Row>
           <Col span={4} offset={2} className="movie__poster">
             <div
-              style={{ backgroundImage: `url('${movie.posterPath}')` }}
+              style={{ backgroundImage: `url('${tvShow.posterPath}')` }}
             ></div>
             ;
           </Col>
@@ -54,19 +40,19 @@ const MovieDetails = ({ movie }: MovieDetailsProps) => {
               <Fragment>
                 <div className="movie__info-header">
                   <h1>
-                    {movie.title}
+                    {tvShow.title}
                     <span>
-                      {moment(movie.releaseDate, 'YYYY-MM-DD').format('YYYY')}
+                      {moment(tvShow.releaseDate, 'YYYY-MM-DD').format('YYYY')}
                     </span>
                   </h1>
                 </div>
                 <div className="movie__info-content">
                   <h3>Overview</h3>
-                  <p>{movie.overview}</p>
+                  <p>{tvShow.overview}</p>
                   <br />
                   <h3>Genres</h3>
                   <ul>
-                    {movie.genres.map((genre) => (
+                    {genres.map((genre) => (
                       <li key={genre.id}>{genre.name}</li>
                     ))}
                   </ul>
@@ -74,11 +60,10 @@ const MovieDetails = ({ movie }: MovieDetailsProps) => {
               </Fragment>
             </>
           </Col>
-          <Button onClick={addToWatchList}>AddToWatchList</Button>
         </Row>
       </div>
     </div>
   );
 };
 
-export default MovieDetails;
+export default TvShowDetails;

@@ -2,9 +2,9 @@ import { api } from '.';
 
 export interface PersonQuery {
   id: number;
-  title: string;
-  overview: string;
-  releaseDate: string;
+  name: string;
+  gender: string;
+  biography: string;
   posterPath: string;
 }
 

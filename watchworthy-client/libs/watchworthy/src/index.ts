@@ -5,6 +5,8 @@ export * from './lib/hooks';
 export * from './lib/Layout';
 export * from './lib/MovieCard';
 export * from './lib/MovieList';
+export * from './lib/PeopleCard/PeopleCard';
+export * from './lib/PeopleDetails';
 export * from './lib/PersonList';
+export * from './lib/PersonMovieCard';
 export * from './lib/TvShowList';
-export * from './lib/PeopleCard/PeopleCard'
