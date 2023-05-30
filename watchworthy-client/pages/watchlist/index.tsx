@@ -1,4 +1,4 @@
-import { Card, Col, Divider, Row } from 'antd';
+import { Button, Card, Col, Divider, Row, message } from 'antd';
 import axios from 'axios';
 import { useUser } from 'libs/watchworthy/src/lib/hooks';
 import { useRouter } from 'next/router';
@@ -10,6 +10,7 @@ interface Movie {
   overview: string;
   posterPath: string;
   releaseDate: string;
+  watchlistId: number;
 }
 
 const WatchList = () => {
@@ -36,6 +37,19 @@ const WatchList = () => {
     fetchData();
   }, [user]);
 
+  const removeMovieFromWatchlist = async (watchlistId: number) => {
+    try {
+      await axios.delete(
+        `http://localhost:8081/movie/removemoviefromwatchlist/${watchlistId}`
+      );
+      message.warning('Movie removed from watchlist successfully!');
+
+      console.log('Movie removed from watchlist successfully');
+    } catch (error) {
+      console.error('Error removing movie from watchlist', error);
+    }
+  };
+
   return (
     <>
       <h1>My WatchList</h1>
@@ -51,6 +65,12 @@ const WatchList = () => {
             >
               <Card.Meta title={movie.title} description="Adventure" />
             </Card>
+            <Button
+              danger
+              onClick={() => removeMovieFromWatchlist(movie.watchlistId)}
+            >
+              Remove Movie From Watchlist
+            </Button>
           </Col>
         ))}
       </Row>

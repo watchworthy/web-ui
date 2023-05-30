@@ -1,4 +1,4 @@
-import { Button, Col, Rate, Row, Slider, message } from 'antd';
+import { Button, Col, Rate, Row, message } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
 import { Fragment, useEffect, useState } from 'react';
@@ -25,7 +25,10 @@ const MovieDetails = ({ movie }: MovieDetailsProps) => {
         message.success('Movie added to watchlist successfully!');
       })
       .catch((error) => {
-        message.error('Error adding movie to watchlist:', error);
+        message.error(
+          'You have already added this movie to your watchlist',
+          error
+        );
       });
   };
 
@@ -73,11 +76,9 @@ const MovieDetails = ({ movie }: MovieDetailsProps) => {
       const response = await axios.post(
         `http://localhost:8081/movierates/ratemovie/${movie.id}/${user.user?.id}?rateNum=${rateNum}`
       );
-      console.log('Movie rated successfully');
 
       const userRating = response.data;
       setRateNum(userRating);
-
       message.success('Movie rated successfully!');
       window.location.reload();
     } catch (error) {
@@ -157,13 +158,8 @@ const MovieDetails = ({ movie }: MovieDetailsProps) => {
         )}
       </div>
       <div>
-        <Slider
-          min={1}
-          max={5}
-          step={1}
-          value={rateNum}
-          onChange={handleRateChange}
-        />
+        <Rate allowHalf value={rateNum} onChange={handleRateChange} />
+        <br />
         <Button onClick={handleRateMovie}>Rate This Movie</Button>
       </div>
     </div>
