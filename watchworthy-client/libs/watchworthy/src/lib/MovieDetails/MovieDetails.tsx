@@ -1,7 +1,7 @@
-import { Button, Col, Row } from 'antd';
+import { Button, Col, Rate, Row, message } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
-import { Fragment } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Movie } from 'types/common';
 import { useUser } from '../hooks';
 
@@ -11,14 +11,79 @@ interface MovieDetailsProps {
 const MovieDetails = ({ movie }: MovieDetailsProps) => {
   const user = useUser();
 
-  const addToWatchList = (values: any) => {
+  const addToWatchList = () => {
     const data = {
       userId: user.user?.id,
       movieId: movie.id,
     };
-    axios.post(
-      `http://localhost:8081/movie/addtowatchlist/${user.user?.id}/${movie.id}`
-    );
+
+    axios
+      .post(
+        `http://localhost:8081/movie/addtowatchlist/${user.user?.id}/${movie.id}`
+      )
+      .then(() => {
+        message.success('Movie added to watchlist successfully!');
+      })
+      .catch((error) => {
+        message.error(
+          'You have already added this movie to your watchlist',
+          error
+        );
+      });
+  };
+
+  const [averageRating, setAverageRating] = useState(null);
+  const [getYourRateNum, setYourRateNum] = useState(null);
+
+  useEffect(() => {
+    const fetchAverageRating = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8081/movierates/average-rating/${movie.id}`
+        );
+        setAverageRating(response.data);
+      } catch (error) {
+        console.error('Error fetching average rating:', error);
+      }
+    };
+
+    fetchAverageRating();
+  }, [movie]);
+
+  useEffect(() => {
+    const findYourRateNum = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8081/movierates/getuserratenum/${movie.id}/${user.user?.id}`
+        );
+        setYourRateNum(response.data);
+      } catch (error) {
+        console.error('Error fetching average rating:', error);
+      }
+    };
+
+    findYourRateNum();
+  }, [movie, user]);
+
+  const [rateNum, setRateNum] = useState(0);
+
+  const handleRateChange = (value: any) => {
+    setRateNum(value);
+  };
+
+  const handleRateMovie = async () => {
+    try {
+      const response = await axios.post(
+        `http://localhost:8081/movierates/ratemovie/${movie.id}/${user.user?.id}?rateNum=${rateNum}`
+      );
+
+      const userRating = response.data;
+      setRateNum(userRating);
+      message.success('Movie rated successfully!');
+      window.location.reload();
+    } catch (error) {
+      console.error('Error rating movie:', error);
+    }
   };
 
   const genres = [
@@ -76,6 +141,26 @@ const MovieDetails = ({ movie }: MovieDetailsProps) => {
           </Col>
           <Button onClick={addToWatchList}>AddToWatchList</Button>
         </Row>
+      </div>
+      <div className="movie__info-content">
+        <span>Average Rating:</span>
+        {averageRating !== null ? (
+          <Rate disabled allowHalf defaultValue={averageRating} />
+        ) : (
+          <span>No rating available</span>
+        )}
+
+        <span>Your Rate:</span>
+        {getYourRateNum !== null ? (
+          <Rate disabled allowHalf defaultValue={getYourRateNum} />
+        ) : (
+          <span>No rating available</span>
+        )}
+      </div>
+      <div>
+        <Rate allowHalf value={rateNum} onChange={handleRateChange} />
+        <br />
+        <Button onClick={handleRateMovie}>Rate This Movie</Button>
       </div>
     </div>
   );
