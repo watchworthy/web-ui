@@ -1,0 +1,31 @@
+.event-card {
+  border: 1px solid #e8e8e8;
+  padding: 16px;
+  margin-bottom: 16px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.event-card h2 {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.event-card .event-image {
+  width: 100%;
+  max-height: 320px; /* Adjust the desired initial height */
+  overflow: hidden;
+}
+
+.event-card .event-image img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+@media (min-width: 768px) {
+  .event-card .event-image {
+    max-height: 286px; /* Adjust the desired height for larger screens */
+  }
+}

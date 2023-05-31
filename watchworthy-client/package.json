@@ -40,6 +40,7 @@
     "react-router-dom": "^6.11.1",
     "react-use-websocket": "^4.3.1",
     "sass": "^1.62.1",
+    "styled-components": "^5.3.11",
     "typescript": "5.0.4"
   },
   "devDependencies": {
@@ -51,6 +52,7 @@
     "@storybook/react": "7.0.2",
     "@storybook/testing-library": "0.0.14-next.2",
     "@types/jsonwebtoken": "^9.0.2",
+    "@types/styled-components": "^5.1.26",
     "cross-env": "^7.0.3",
     "eslint-plugin-storybook": "^0.6.11",
     "formik": "^2.2.9",

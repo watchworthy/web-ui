@@ -7,10 +7,21 @@ export interface Movie {
   posterPath: string;
 }
 
+
 export interface Genre {
   id: number;
   name: string;
 }
+
+
+export interface Event {
+  id: number;
+  name: string;
+  date: string;
+  posterPath: string;
+}
+
+
 
 export interface Info {
   total: number;
