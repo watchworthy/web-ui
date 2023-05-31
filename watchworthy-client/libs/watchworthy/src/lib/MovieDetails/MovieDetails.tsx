@@ -90,7 +90,7 @@ const MovieDetails = ({ movie }: MovieDetailsProps) => {
 
   const [commentText, setCommentText] = useState('');
 
-  const handleCommentTextChange = (e) => {
+  const handleCommentTextChange = (e: any) => {
     setCommentText(e.target.value);
   };
 
@@ -105,6 +105,7 @@ const MovieDetails = ({ movie }: MovieDetailsProps) => {
       );
       message.success('You commented successfully!');
       window.location.reload();
+      console.log('Comment added succesfully');
     } catch (error) {
       console.error('Error commenting in the movie:', error);
     }
