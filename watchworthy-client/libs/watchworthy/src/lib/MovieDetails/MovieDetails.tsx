@@ -1,9 +1,11 @@
-import { Button, Col, Rate, Row, message } from 'antd';
+import { Button, Col, Input, List, Rate, Row, Typography, message } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
 import { Fragment, useEffect, useState } from 'react';
 import { Movie } from 'types/common';
 import { useUser } from '../hooks';
+
+const { Text } = Typography;
 
 interface MovieDetailsProps {
   movie: Movie;
@@ -86,6 +88,40 @@ const MovieDetails = ({ movie }: MovieDetailsProps) => {
     }
   };
 
+  const [commentText, setCommentText] = useState('');
+
+  const handleCommentTextChange = (e: any) => {
+    setCommentText(e.target.value);
+  };
+
+  const addCommentToMovie = async () => {
+    try {
+      const data = {
+        text: commentText,
+      };
+      const response = await axios.post(
+        `http://localhost:8081/movie/addcommenttomovies/${movie.id}/${user.user?.id}`,
+        data
+      );
+      message.success('You commented successfully!');
+      window.location.reload();
+      console.log('Comment added succesfully');
+    } catch (error) {
+      console.error('Error commenting in the movie:', error);
+    }
+  };
+
+  const removeComment = async (id: number) => {
+    try {
+      await axios.delete(`http://localhost:8081/movie/removecomment/${id}`);
+      message.warning('Comment removed successfully !');
+      window.location.reload();
+      console.log('Comment removed successfully');
+    } catch (error) {
+      console.error('Error removing comment ', error);
+    }
+  };
+
   const genres = [
     {
       id: 1,
@@ -161,6 +197,84 @@ const MovieDetails = ({ movie }: MovieDetailsProps) => {
         <Rate allowHalf value={rateNum} onChange={handleRateChange} />
         <br />
         <Button onClick={handleRateMovie}>Rate This Movie</Button>
+      </div>
+      <div className="commentsContainer">
+        <h1>Comments</h1>
+        <hr />
+        <List
+          dataSource={movie.comments}
+          renderItem={(comment) => (
+            <List.Item className="commentItem">
+              <List.Item.Meta
+                title={
+                  <div className="commentHeader">{`${comment.firstName} ${comment.lastName}`}</div>
+                }
+                description={<div className="commentText">{comment.text}</div>}
+              />
+              <Text type="secondary">{comment.dateTimeCreated}</Text>
+              <br />
+              <Button
+                danger
+                value="small"
+                onClick={() => removeComment(comment.id)}
+              >
+                Remove Comment
+              </Button>
+            </List.Item>
+          )}
+        />
+
+        <style jsx>{`
+          .commentsContainer {
+            margin-top: 20px;
+          }
+
+          .commentItem {
+            padding: 10px;
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
+            margin-bottom: 10px;
+          }
+
+          .commentHeader {
+            font-weight: bold;
+          }
+
+          .commentText {
+            margin-top: 5px;
+          }
+        `}</style>
+      </div>
+      <hr />
+      <br />
+      <div>
+        <h3>Add Comment:</h3>
+        <div className="addCommentContainer">
+          <Input
+            type="text"
+            value={commentText}
+            onChange={handleCommentTextChange}
+          />
+          <Button type="primary" onClick={addCommentToMovie}>
+            Add Comment
+          </Button>
+        </div>
+        <style jsx>{`
+          .addCommentContainer {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+          }
+
+          .addCommentContainer h2 {
+            margin-right: 10px;
+          }
+
+          .addCommentContainer input {
+            width: 300px;
+            margin-right: 10px;
+          }
+        `}</style>
       </div>
     </div>
   );
