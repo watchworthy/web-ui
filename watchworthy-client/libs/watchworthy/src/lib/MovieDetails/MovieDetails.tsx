@@ -122,6 +122,54 @@ const MovieDetails = ({ movie }: MovieDetailsProps) => {
     }
   };
 
+  const [commentLikes, setCommentLikes] = useState<{
+    [commentId: string]: number;
+  }>({});
+
+  useEffect(() => {
+    const fetchCommentLikes = async (commentId: number) => {
+      try {
+        const response = await axios.get<number>(
+          `http://localhost:8081/commentlikes/countCommentLikes/${commentId}`
+        );
+        setCommentLikes((prevLikes) => ({
+          ...prevLikes,
+          [commentId]: response.data,
+        }));
+      } catch (error) {
+        console.error('Error fetching comment likes:', error);
+      }
+    };
+
+    movie.comments.forEach((comment) => {
+      fetchCommentLikes(comment.id);
+    });
+  }, [movie.comments]);
+
+  const [commentDissLikes, setCommentDissLikes] = useState<{
+    [commentId: string]: number;
+  }>({});
+
+  useEffect(() => {
+    const fetchCommentDissLikes = async (commentId: number) => {
+      try {
+        const response = await axios.get<number>(
+          `http://localhost:8081/commentlikes/countCommentDissLikes/${commentId}`
+        );
+        setCommentDissLikes((prevLikes) => ({
+          ...prevLikes,
+          [commentId]: response.data,
+        }));
+      } catch (error) {
+        console.error('Error fetching comment likes:', error);
+      }
+    };
+
+    movie.comments.forEach((comment) => {
+      fetchCommentDissLikes(comment.id);
+    });
+  }, [movie.comments]);
+
   const genres = [
     {
       id: 1,
@@ -212,6 +260,10 @@ const MovieDetails = ({ movie }: MovieDetailsProps) => {
                 description={<div className="commentText">{comment.text}</div>}
               />
               <Text type="secondary">{comment.dateTimeCreated}</Text>
+              <br />
+              <p>Likes: {commentLikes[comment.id]}</p>
+              <br />
+              <p>DissLikes: {commentDissLikes[comment.id]}</p>
               <br />
               <Button
                 danger
