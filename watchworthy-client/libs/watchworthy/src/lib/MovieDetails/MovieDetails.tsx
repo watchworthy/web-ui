@@ -4,6 +4,7 @@ import moment from 'moment';
 import { Fragment, useEffect, useState } from 'react';
 import { Movie } from 'types/common';
 import { useUser } from '../hooks';
+import { DeleteOutlined } from '@ant-design/icons';
 
 const { Text } = Typography;
 
@@ -214,36 +215,51 @@ const MovieDetails = ({ movie }: MovieDetailsProps) => {
               <Text type="secondary">{comment.dateTimeCreated}</Text>
               <br />
               <Button
-                danger
-                value="small"
-                onClick={() => removeComment(comment.id)}
-              >
-                Remove Comment
-              </Button>
+        className="deleteButton"
+        danger
+        size="large"
+        icon={<DeleteOutlined />}
+        onClick={() => removeComment(comment.id)}
+      />
             </List.Item>
           )}
         />
 
-        <style jsx>{`
-          .commentsContainer {
-            margin-top: 20px;
-          }
+<style jsx>{`
+  .commentsContainer {
+    margin-top: 20px;
+  }
 
-          .commentItem {
-            padding: 10px;
-            border: 1px solid #e8e8e8;
-            border-radius: 4px;
-            margin-bottom: 10px;
-          }
+  .commentItem {
+    padding: 10px;
+    border: 1px solid #e8e8e8;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
 
-          .commentHeader {
-            font-weight: bold;
-          }
+  .commentHeader {
+    font-weight: bold;
+  }
 
-          .commentText {
-            margin-top: 5px;
-          }
-        `}</style>
+  .commentText {
+    margin-top: 5px;
+  }
+
+  .secondaryText {
+    color: #888888;
+  }
+
+  .commentDate {
+    margin-top: 5px;
+    display: inline-block;
+    margin-right: 10px;
+  }
+
+  .deleteButton {
+    margin-left: 10px;
+    font-size: 18px;
+  }
+`}</style>
       </div>
       <hr />
       <br />
