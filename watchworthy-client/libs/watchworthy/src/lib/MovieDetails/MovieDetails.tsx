@@ -1,3 +1,8 @@
+import {
+  DeleteOutlined,
+  DislikeOutlined,
+  LikeOutlined,
+} from '@ant-design/icons';
 import { Button, Col, Input, List, Rate, Row, Typography, message } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
@@ -123,6 +128,80 @@ const MovieDetails = ({ movie }: MovieDetailsProps) => {
     }
   };
 
+  const [commentLikes, setCommentLikes] = useState<{
+    [commentId: string]: number;
+  }>({});
+
+  useEffect(() => {
+    const fetchCommentLikes = async (commentId: number) => {
+      try {
+        const response = await axios.get<number>(
+          `http://localhost:8081/commentlikes/countCommentLikes/${commentId}`
+        );
+        setCommentLikes((prevLikes) => ({
+          ...prevLikes,
+          [commentId]: response.data,
+        }));
+      } catch (error) {
+        console.error('Error fetching comment likes:', error);
+      }
+    };
+
+    movie.comments.forEach((comment) => {
+      fetchCommentLikes(comment.id);
+    });
+  }, [movie.comments]);
+
+  const [commentDissLikes, setCommentDissLikes] = useState<{
+    [commentId: string]: number;
+  }>({});
+
+  useEffect(() => {
+    const fetchCommentDissLikes = async (commentId: number) => {
+      try {
+        const response = await axios.get<number>(
+          `http://localhost:8081/commentlikes/countCommentDissLikes/${commentId}`
+        );
+        setCommentDissLikes((prevLikes) => ({
+          ...prevLikes,
+          [commentId]: response.data,
+        }));
+      } catch (error) {
+        console.error('Error fetching comment likes:', error);
+      }
+    };
+
+    movie.comments.forEach((comment) => {
+      fetchCommentDissLikes(comment.id);
+    });
+  }, [movie.comments]);
+
+  const likeComment = async (commentId: number) => {
+    try {
+      await axios.post(
+        `http://localhost:8081/commentlikes/likeComment/${commentId}/${user.user?.id}`
+      );
+      message.success('like added successfully!');
+      window.location.reload();
+      console.log('Comment liked succesfully');
+    } catch (error) {
+      console.error('Error :', error);
+    }
+  };
+
+  const dissLikeComment = async (commentId: number) => {
+    try {
+      await axios.post(
+        `http://localhost:8081/commentlikes/dissLikeComment/${commentId}/${user.user?.id}`
+      );
+      message.success('Disslike added successfully!');
+      window.location.reload();
+      console.log('Comment Dissliked succesfully');
+    } catch (error) {
+      console.error('Error :', error);
+    }
+  };
+
   const genres = [
     {
       id: 1,
@@ -213,14 +292,26 @@ const MovieDetails = ({ movie }: MovieDetailsProps) => {
                 description={<div className="commentText">{comment.text}</div>}
               />
               <Text type="secondary">{comment.dateTimeCreated}</Text>
-              <br />
-              <Button
-        className="deleteButton"
-        danger
-        size="large"
-        icon={<DeleteOutlined />}
-        onClick={() => removeComment(comment.id)}
-      />
+              <div className="commentActions">
+                <Button
+                  size="small"
+                  onClick={() => likeComment(comment.id)}
+                  icon={<LikeOutlined />}
+                />
+                <p>{commentLikes[comment.id]}</p>
+                <Button
+                  size="small"
+                  onClick={() => dissLikeComment(comment.id)}
+                  icon={<DislikeOutlined />}
+                />
+                <p>{commentDissLikes[comment.id]}</p>
+                <Button
+                  danger
+                  size="small"
+                  onClick={() => removeComment(comment.id)}
+                  icon={<DeleteOutlined />}
+                />
+              </div>
             </List.Item>
           )}
         />
@@ -241,26 +332,18 @@ const MovieDetails = ({ movie }: MovieDetailsProps) => {
     font-weight: bold;
   }
 
-  .commentText {
-    margin-top: 5px;
-  }
+          .commentText {
+            margin-top: 5px;
+          }
 
-  .secondaryText {
-    color: #888888;
-  }
-
-  .commentDate {
-    margin-top: 5px;
-    display: inline-block;
-    margin-right: 10px;
-  }
-
-  .deleteButton {
-    margin-left: 10px;
-    font-size: 18px;
-  }
-`}</style>
+          .commentActions {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+          }
+        `}</style>
       </div>
+
       <hr />
       <br />
       <div>
