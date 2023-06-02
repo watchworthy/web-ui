@@ -1,5 +1,4 @@
 import {
-  DeleteOutlined,
   DislikeOutlined,
   LikeOutlined,
 } from '@ant-design/icons';
