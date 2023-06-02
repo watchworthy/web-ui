@@ -1,3 +1,8 @@
+import {
+  DeleteOutlined,
+  DislikeOutlined,
+  LikeOutlined,
+} from '@ant-design/icons';
 import { Button, Col, Input, List, Rate, Row, Typography, message } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
@@ -170,6 +175,32 @@ const MovieDetails = ({ movie }: MovieDetailsProps) => {
     });
   }, [movie.comments]);
 
+  const likeComment = async (commentId: number) => {
+    try {
+      await axios.post(
+        `http://localhost:8081/commentlikes/likeComment/${commentId}/${user.user?.id}`
+      );
+      message.success('like added successfully!');
+      window.location.reload();
+      console.log('Comment liked succesfully');
+    } catch (error) {
+      console.error('Error :', error);
+    }
+  };
+
+  const dissLikeComment = async (commentId: number) => {
+    try {
+      await axios.post(
+        `http://localhost:8081/commentlikes/dissLikeComment/${commentId}/${user.user?.id}`
+      );
+      message.success('Disslike added successfully!');
+      window.location.reload();
+      console.log('Comment Dissliked succesfully');
+    } catch (error) {
+      console.error('Error :', error);
+    }
+  };
+
   const genres = [
     {
       id: 1,
@@ -260,18 +291,26 @@ const MovieDetails = ({ movie }: MovieDetailsProps) => {
                 description={<div className="commentText">{comment.text}</div>}
               />
               <Text type="secondary">{comment.dateTimeCreated}</Text>
-              <br />
-              <p>Likes: {commentLikes[comment.id]}</p>
-              <br />
-              <p>DissLikes: {commentDissLikes[comment.id]}</p>
-              <br />
-              <Button
-                danger
-                value="small"
-                onClick={() => removeComment(comment.id)}
-              >
-                Remove Comment
-              </Button>
+              <div className="commentActions">
+                <Button
+                  size="small"
+                  onClick={() => likeComment(comment.id)}
+                  icon={<LikeOutlined />}
+                />
+                <p>{commentLikes[comment.id]}</p>
+                <Button
+                  size="small"
+                  onClick={() => dissLikeComment(comment.id)}
+                  icon={<DislikeOutlined />}
+                />
+                <p>{commentDissLikes[comment.id]}</p>
+                <Button
+                  danger
+                  size="small"
+                  onClick={() => removeComment(comment.id)}
+                  icon={<DeleteOutlined />}
+                />
+              </div>
             </List.Item>
           )}
         />
@@ -295,8 +334,15 @@ const MovieDetails = ({ movie }: MovieDetailsProps) => {
           .commentText {
             margin-top: 5px;
           }
+
+          .commentActions {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+          }
         `}</style>
       </div>
+
       <hr />
       <br />
       <div>
