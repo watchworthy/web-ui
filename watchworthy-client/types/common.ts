@@ -33,6 +33,7 @@ export interface TvShow {
   overview: string;
   releaseDate: string;
   posterPath: string;
+  comments: Comment[];
 }
 
 export interface TvShowInfo {
