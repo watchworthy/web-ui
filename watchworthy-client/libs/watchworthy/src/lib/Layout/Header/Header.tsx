@@ -93,18 +93,16 @@ export const Header = ({ toggleSidebar }: LayoutProps) => {
           <Col>
             <div className={styles.thirdWrapper}>
               <Link href="#">EN</Link>
-              <Link href="/watchlist">Watch List</Link>
               {user.user ? (
                 <>
+                  <Link href="/watchlist">Watch List</Link>
                   <div style={{ color: '#fff' }}>{user.user?.email}</div>
                   <Dropdown menu={{ items }}>
                     <Space>
-                    
-                        <a>
-                          <Avatar size="large" icon={<UserOutlined />} />
-                          <DownOutlined />
-                        </a>
-                    
+                      <a>
+                        <Avatar size="large" icon={<UserOutlined />} />
+                        <DownOutlined />
+                      </a>
                     </Space>
                   </Dropdown>
                 </>

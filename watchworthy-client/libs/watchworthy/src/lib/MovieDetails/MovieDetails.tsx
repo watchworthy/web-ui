@@ -1,9 +1,16 @@
-import { Button, Col, Rate, Row, message } from 'antd';
+import {
+  DislikeOutlined,
+  LikeOutlined,
+} from '@ant-design/icons';
+import { Button, Col, Input, List, Rate, Row, Typography, message } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
 import { Fragment, useEffect, useState } from 'react';
 import { Movie } from 'types/common';
 import { useUser } from '../hooks';
+import { DeleteOutlined } from '@ant-design/icons';
+
+const { Text } = Typography;
 
 interface MovieDetailsProps {
   movie: Movie;
@@ -86,6 +93,115 @@ const MovieDetails = ({ movie }: MovieDetailsProps) => {
     }
   };
 
+  
+  const [commentText, setCommentText] = useState('');
+
+  const handleCommentTextChange = (e: any) => {
+    setCommentText(e.target.value);
+  };
+
+  const addCommentToMovie = async () => {
+    try {
+      const data = {
+        text: commentText,
+      };
+      const response = await axios.post(
+        `http://localhost:8081/movie/addcommenttomovies/${movie.id}/${user.user?.id}`,
+        data
+      );
+      message.success('You commented successfully!');
+      window.location.reload();
+      console.log('Comment added succesfully');
+    } catch (error) {
+      console.error('Error commenting in the movie:', error);
+    }
+  };
+
+  const removeComment = async (id: number) => {
+    try {
+      await axios.delete(`http://localhost:8081/movie/removecomment/${id}`);
+      message.warning('Comment removed successfully !');
+      window.location.reload();
+      console.log('Comment removed successfully');
+    } catch (error) {
+      console.error('Error removing comment ', error);
+    }
+  };
+
+  const [commentLikes, setCommentLikes] = useState<{
+    [commentId: string]: number;
+  }>({});
+
+  useEffect(() => {
+    const fetchCommentLikes = async (commentId: number) => {
+      try {
+        const response = await axios.get<number>(
+          `http://localhost:8081/commentlikes/countCommentLikes/${commentId}`
+        );
+        setCommentLikes((prevLikes) => ({
+          ...prevLikes,
+          [commentId]: response.data,
+        }));
+      } catch (error) {
+        console.error('Error fetching comment likes:', error);
+      }
+    };
+
+    movie.comments.forEach((comment) => {
+      fetchCommentLikes(comment.id);
+    });
+  }, [movie.comments]);
+
+  const [commentDissLikes, setCommentDissLikes] = useState<{
+    [commentId: string]: number;
+  }>({});
+
+  useEffect(() => {
+    const fetchCommentDissLikes = async (commentId: number) => {
+      try {
+        const response = await axios.get<number>(
+          `http://localhost:8081/commentlikes/countCommentDissLikes/${commentId}`
+        );
+        setCommentDissLikes((prevLikes) => ({
+          ...prevLikes,
+          [commentId]: response.data,
+        }));
+      } catch (error) {
+        console.error('Error fetching comment likes:', error);
+      }
+    };
+
+    movie.comments.forEach((comment) => {
+      fetchCommentDissLikes(comment.id);
+    });
+  }, [movie.comments]);
+
+  const likeComment = async (commentId: number) => {
+    try {
+      await axios.post(
+        `http://localhost:8081/commentlikes/likeComment/${commentId}/${user.user?.id}`
+      );
+      message.success('like added successfully!');
+      window.location.reload();
+      console.log('Comment liked succesfully');
+    } catch (error) {
+      console.error('Error :', error);
+    }
+  };
+
+  const dissLikeComment = async (commentId: number) => {
+    try {
+      await axios.post(
+        `http://localhost:8081/commentlikes/dissLikeComment/${commentId}/${user.user?.id}`
+      );
+      message.success('Disslike added successfully!');
+      window.location.reload();
+      console.log('Comment Dissliked succesfully');
+    } catch (error) {
+      console.error('Error :', error);
+    }
+  };
+
   const genres = [
     {
       id: 1,
@@ -161,6 +277,103 @@ const MovieDetails = ({ movie }: MovieDetailsProps) => {
         <Rate allowHalf value={rateNum} onChange={handleRateChange} />
         <br />
         <Button onClick={handleRateMovie}>Rate This Movie</Button>
+      </div>
+      <div className="commentsContainer">
+        <h1>Comments</h1>
+        <hr />
+        <List
+          dataSource={movie.comments}
+          renderItem={(comment) => (
+            <List.Item className="commentItem">
+              <List.Item.Meta
+                title={
+                  <div className="commentHeader">{`${comment.firstName} ${comment.lastName}`}</div>
+                }
+                description={<div className="commentText">{comment.text}</div>}
+              />
+              <Text type="secondary">{comment.dateTimeCreated}</Text>
+              <div className="commentActions">
+                <Button
+                  size="small"
+                  onClick={() => likeComment(comment.id)}
+                  icon={<LikeOutlined />}
+                />
+                <p>{commentLikes[comment.id]}</p>
+                <Button
+                  size="small"
+                  onClick={() => dissLikeComment(comment.id)}
+                  icon={<DislikeOutlined />}
+                />
+                <p>{commentDissLikes[comment.id]}</p>
+                <Button
+                  danger
+                  size="small"
+                  onClick={() => removeComment(comment.id)}
+                  icon={<DeleteOutlined />}
+                />
+              </div>
+            </List.Item>
+          )}
+        />
+
+<style jsx>{`
+  .commentsContainer {
+    margin-top: 20px;
+  }
+
+  .commentItem {
+    padding: 10px;
+    border: 1px solid #e8e8e8;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+
+  .commentHeader {
+    font-weight: bold;
+  }
+
+          .commentText {
+            margin-top: 5px;
+          }
+
+          .commentActions {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+          }
+        `}</style>
+      </div>
+
+      <hr />
+      <br />
+      <div>
+        <h3>Add Comment:</h3>
+        <div className="addCommentContainer">
+          <Input
+            type="text"
+            value={commentText}
+            onChange={handleCommentTextChange}
+          />
+          <Button type="primary" onClick={addCommentToMovie}>
+            Add Comment
+          </Button>
+        </div>
+        <style jsx>{`
+          .addCommentContainer {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+          }
+
+          .addCommentContainer h2 {
+            margin-right: 10px;
+          }
+
+          .addCommentContainer input {
+            width: 300px;
+            margin-right: 10px;
+          }
+        `}</style>
       </div>
     </div>
   );

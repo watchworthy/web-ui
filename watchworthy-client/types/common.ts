@@ -4,10 +4,21 @@ export interface Movie {
   overview: string;
   releaseDate: string;
   genres: Genre[];
+  comments: Comment[];
   posterPath: string;
 }
 
+<<<<<<< HEAD
 
+=======
+export interface Comment {
+  id: number;
+  text: string;
+  firstName: string;
+  lastName: string;
+  dateTimeCreated: string;
+}
+>>>>>>> main
 export interface Genre {
   id: number;
   name: string;
@@ -36,6 +47,7 @@ export interface TvShow {
   overview: string;
   releaseDate: string;
   posterPath: string;
+  comments: Comment[];
 }
 
 export interface TvShowInfo {
