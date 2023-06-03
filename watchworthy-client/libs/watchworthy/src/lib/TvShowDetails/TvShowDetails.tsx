@@ -1,6 +1,6 @@
-import { Button, Col, Input, List, Row, message } from 'antd';
+import { Button, Col, Input, List, Rate, Row, message } from 'antd';
 import moment from 'moment';
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { TvShow } from 'types/common';
 import { useUser } from '../hooks';
 import axios from 'axios';
@@ -9,8 +9,67 @@ import { DeleteOutlined } from '@ant-design/icons';
 interface TvShowDetailsProps {
   tvShow: TvShow;
 }
-const TvShowDetails = ({ tvShow }: TvShowDetailsProps) => {
+  const TvShowDetails = ({ tvShow }: TvShowDetailsProps) => {
   const user = useUser();
+
+  const [averageRating, setAverageRating] = useState(null);
+  const [getYourRateNum, setYourRateNum] = useState(null);
+
+  useEffect(() => {
+    const fetchAverageRating = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8081/tvshowrates/average-rating/${tvShow.id}`
+        );
+        setAverageRating(response.data);
+      } catch (error) {
+        console.error('Error fetching average rating:', error);
+      }
+    };
+
+    fetchAverageRating();
+  }, [tvShow]);
+
+  useEffect(() => {
+    const findYourRateNum = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8081/tvshowrates/getuserratenum/${tvShow.id}/${user.user?.id}`
+        );
+        setYourRateNum(response.data);
+      } catch (error) {
+        console.error('Error fetching average rating:', error);
+      }
+    };
+
+    findYourRateNum();
+  }, [tvShow, user]);
+
+  const [rateNum, setRateNum] = useState(0);
+
+  const handleRateChange = (value: any) => {
+    setRateNum(value);
+  };
+
+  const handleRateTvShow = async () => {
+    try {
+      const response = await axios.post(
+        `http://localhost:8081/tvshowrates/ratetvshow/${tvShow.id}/${user.user?.id}?rateNum=${rateNum}`
+      );
+
+      const userRating = response.data;
+      setRateNum(userRating);
+      message.success('Tv Show rated successfully!');
+      window.location.reload();
+    } catch (error) {
+      console.error('Error rating Tv Show:', error);
+    }
+  };
+
+
+
+
+
 
   const [commentText, setCommentText] = useState('');
 
@@ -103,7 +162,30 @@ const TvShowDetails = ({ tvShow }: TvShowDetailsProps) => {
           </Col>
         </Row>
       </div>
-  
+
+
+      <div className="movie__info-content">
+        <span>Average Rating:</span>
+        {averageRating !== null ? (
+          <Rate disabled allowHalf defaultValue={averageRating} />
+        ) : (
+          <span>No rating available</span>
+        )}
+
+        <span>Your Rate:</span>
+        {getYourRateNum !== null ? (
+          <Rate disabled allowHalf defaultValue={getYourRateNum} />
+        ) : (
+          <span>No rating available</span>
+        )}
+      </div>
+      <div>
+        <Rate allowHalf value={rateNum} onChange={handleRateChange} />
+        <br />
+        <Button onClick={handleRateTvShow}>Rate This Movie</Button>
+      </div>
+
+      
       <div className="commentsContainer">
         <h1>Comments</h1>
         <hr />
