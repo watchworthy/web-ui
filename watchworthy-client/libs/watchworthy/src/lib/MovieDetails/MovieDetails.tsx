@@ -93,6 +93,7 @@ const MovieDetails = ({ movie }: MovieDetailsProps) => {
     }
   };
 
+  
   const [commentText, setCommentText] = useState('');
 
   const handleCommentTextChange = (e: any) => {

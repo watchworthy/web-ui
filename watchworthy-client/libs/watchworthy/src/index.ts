@@ -10,3 +10,7 @@ export * from './lib/PeopleDetails';
 export * from './lib/PersonList';
 export * from './lib/PersonMovieCard';
 export * from './lib/TvShowList';
+export * from './lib/EventCards/EventCards';
+export * from './lib/EventCards/EventCard.module.css'
+
+
