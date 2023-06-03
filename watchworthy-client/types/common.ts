@@ -8,9 +8,6 @@ export interface Movie {
   posterPath: string;
 }
 
-<<<<<<< HEAD
-
-=======
 export interface Comment {
   id: number;
   text: string;
@@ -18,7 +15,6 @@ export interface Comment {
   lastName: string;
   dateTimeCreated: string;
 }
->>>>>>> main
 export interface Genre {
   id: number;
   name: string;
