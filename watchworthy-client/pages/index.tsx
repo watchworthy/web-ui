@@ -1,12 +1,17 @@
+import { DownOutlined } from '@ant-design/icons';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { MovieList, useUser } from '@watchworthy/ui';
-import { Pagination } from 'antd';
+import { Dropdown, Pagination, Space, Typography } from 'antd';
 import fetchMovies from 'api/fetch-all-movies';
+import fetchGenres from 'api/fetch-genres';
 import useMoviesQuery from 'hooks/use-all-movies-query';
 import useDebounce from 'hooks/use-debounce';
+import { Search } from 'libs/watchworthy/src/lib/Search/Search';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { useRouter } from 'next/router';
 import { ParsedUrlQuery } from 'querystring';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Movie } from 'types/common';
 
 const FIRST_PAGE = 1;
 const PAGE_SIZE = 20;
@@ -31,16 +36,31 @@ const getInitialSearchFromQuery = (query: ParsedUrlQuery) => {
   return search;
 };
 
+const getInitialGenreFromQuery = (query: ParsedUrlQuery) => {
+  const genre = query.genre;
+
+  if (typeof genre !== 'string') {
+    return '';
+  }
+
+  return genre;
+};
+
 export const getServerSideProps: GetServerSideProps<{
   initialPage: number;
   initialSearch: string;
+  initialGenre: string;
 }> = async (ctx) => {
   const queryClient = new QueryClient();
 
   const page = getInitialPageFromQuery(ctx.query);
   const search = getInitialSearchFromQuery(ctx.query);
-  const queryKey = ['movies', page, search];
-  await queryClient.prefetchQuery(queryKey, () => fetchMovies(page, search));
+  const genre = getInitialGenreFromQuery(ctx.query);
+
+  const queryKey = ['movies', page, search, genre];
+  await queryClient.prefetchQuery(queryKey, () =>
+    fetchMovies(page, search, genre)
+  );
 
   const prefetchedQueryData = queryClient.getQueryData(queryKey);
 
@@ -49,6 +69,7 @@ export const getServerSideProps: GetServerSideProps<{
       props: {
         initialPage: FIRST_PAGE,
         initialSearch: '',
+        initialGenre: '',
       },
     };
   }
@@ -58,6 +79,7 @@ export const getServerSideProps: GetServerSideProps<{
       dehydratedState: dehydrate(queryClient),
       initialPage: page,
       initialSearch: search,
+      initialGenre: genre,
     },
   };
 };
@@ -65,15 +87,69 @@ export const getServerSideProps: GetServerSideProps<{
 export const Movies = ({
   initialPage,
   initialSearch,
+  initialGenre,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [page, setPage] = useState(initialPage);
   const [search, setSearch] = useState(initialSearch);
+  const [genre, setGenre] = useState(initialGenre);
   const user = useUser();
   const debouncedSearch = useDebounce(search, 500);
+  const debouncedGenre = useDebounce(genre, 500);
+  const router = useRouter();
+  const [selectedMovies, setSelectedMovies] = useState<Movie['id'][]>([]);
   const { data, isLoading, isFetching, isError } = useMoviesQuery(
     page,
-    debouncedSearch
+    debouncedSearch,
+    genre
   );
+  const [menuItems, setMenuItems] = useState<{ key: string; label: string }[]>(
+    []
+  );
+
+  const handleGenreClick = (e: any) => {
+    setGenre(e.key);
+    setSearch('');
+    setPage(FIRST_PAGE);
+    setSelectedMovies([]);
+  };
+
+  useEffect(() => {
+    async function getMenuItems() {
+      try {
+        const genres = await fetchGenres();
+        const transformedItems = [
+          { key: '0', label: 'All' },
+          ...genres.map((genre) => ({
+            key: genre.id.toString(),
+            label: genre.name,
+          })),
+        ];
+        setMenuItems(transformedItems);
+      } catch (error) {
+        console.error('Error fetching menu items:', error);
+      }
+    }
+
+    getMenuItems();
+  }, []);
+
+  const handleSearchChange = (value: string) => {
+    setSearch(value);
+    setPage(FIRST_PAGE);
+    setSelectedMovies([]);
+  };
+
+  useEffect(() => {
+    router.replace(
+      `/?page=${page}${
+        search || genre
+          ? `&search=${debouncedSearch}&genre=${debouncedGenre}`
+          : ''
+      }`,
+      undefined,
+      { shallow: true }
+    );
+  }, [page, debouncedSearch, debouncedGenre]);
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -83,7 +159,46 @@ export const Movies = ({
 
   return (
     <>
-      <h1>Movies</h1>
+      <title>WatchWorthy</title>
+      <h1
+        style={{
+          display: 'flex',
+        }}
+      >
+        Movies
+      </h1>
+
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <Search
+          placeholder="Search for movies..."
+          onChange={(e) => handleSearchChange(e.target.value)}
+        />
+      </div>
+      <div
+        style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center' }}
+      >
+        <Dropdown
+          placement="bottomRight" // Set the placement to "bottomRight"
+          menu={{
+            items: menuItems,
+            selectable: true,
+            defaultSelectedKeys: ['3'],
+            onClick: handleGenreClick,
+          }}
+        >
+          <Typography.Link>
+            <Space>
+              Genre
+              <DownOutlined />
+            </Space>
+          </Typography.Link>
+        </Dropdown>
+      </div>
       <MovieList data={data} isLoading={isLoading} />
       <div
         style={{

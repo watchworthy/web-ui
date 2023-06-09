@@ -10,7 +10,19 @@ interface TvShowListProps {
 
 export const TvShowList = ({ data, isLoading }: TvShowListProps) => {
   const router = useRouter();
-
+  const renderGenres = (genres: { name: string }[]) => {
+    if (genres.length > 2) {
+      const displayedGenres = genres.slice(0, 2).map((genre) => genre.name);
+      return (
+        <>
+          {displayedGenres.join(', ')}
+          {genres.length > 2 && <span style={{ marginLeft: '4px' }}>...</span>}
+        </>
+      );
+    } else {
+      return genres.map((genre) => genre.name).join(', ');
+    }
+  };
   return (
     <>
       <Divider style={{ margin: '20px 0' }} />
@@ -23,7 +35,14 @@ export const TvShowList = ({ data, isLoading }: TvShowListProps) => {
               style={{ width: '100%', border: '#D9D9D9 solid 0.5px' }}
               cover={<img alt="example" src={tvshow.posterPath} />}
             >
-              <Meta title={tvshow.title} description="Adventure" />
+              <Meta
+                title={tvshow.title}
+                description={
+                  tvshow.genres.length > 0
+                    ? renderGenres(tvshow.genres)
+                    : 'Action'
+                }
+              />
             </Card>
           </Col>
         ))}

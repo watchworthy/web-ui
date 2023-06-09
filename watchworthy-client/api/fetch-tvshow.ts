@@ -1,3 +1,4 @@
+import { Season } from 'types/common';
 import { api } from '.';
 
 export interface TvShowQuery {
@@ -6,6 +7,7 @@ export interface TvShowQuery {
   overview: string;
   releaseDate: string;
   posterPath: string;
+  seasons: Season[];
 }
 
 export default async function fetchTvShow(id: string) {
