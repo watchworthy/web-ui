@@ -9,7 +9,6 @@ import { Avatar, Col, Dropdown, Layout, MenuProps, Row, Space } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { Search } from '../../Search/Search';
 import styles from './Header.module.less';
 
 const { Header: HeaderLayout } = Layout;
@@ -85,11 +84,11 @@ export const Header = ({ toggleSidebar }: LayoutProps) => {
               </Link>
             </div>
           </Col>
-          <Col>
+          {/* <Col>
             <div className={styles.search}>
               <Search />
             </div>
-          </Col>
+          </Col> */}
           <Col>
             <div className={styles.thirdWrapper}>
               <Link href="#">EN</Link>

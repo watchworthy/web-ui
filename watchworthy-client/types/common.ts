@@ -43,6 +43,7 @@ export interface TvShow {
   overview: string;
   releaseDate: string;
   posterPath: string;
+  genres: Genre[];
   comments: Comment[];
 }
 
@@ -66,4 +67,23 @@ export interface PeopleInfo {
   size: number;
   page: number;
   data: People[];
+}
+
+export interface Season {
+  id: number;
+  airDate: string;
+  episodes: Episode[];
+  name: string;
+  overview: string;
+  posterPath: string;
+  seasonNumber: number;
+}
+
+export interface Episode {
+  id: number;
+  name: string;
+  overview: string;
+  releaseDate: string;
+  posterPath: string;
+  seasonNumber: number;
 }

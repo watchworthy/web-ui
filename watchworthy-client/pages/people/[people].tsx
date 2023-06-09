@@ -1,6 +1,6 @@
 import { PersonMovieCard } from '@watchworthy/ui';
 import fetchMoviesByPerson from 'api/fetch-all-movies-by-person';
-import fetchTvShowsByPerson from 'api/fetch-all-tvshows-by-person copy';
+import fetchTvShowsByPerson from 'api/fetch-all-tvshows-by-person';
 import fetchPerson from 'api/fetch-person';
 import PeopleDetails from 'libs/watchworthy/src/lib/PeopleDetails/PeopleDetails';
 import { PersonTvShowCard } from 'libs/watchworthy/src/lib/PersonTvShowCard';

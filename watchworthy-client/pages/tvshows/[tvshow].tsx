@@ -1,6 +1,9 @@
 import fetchTvShow from 'api/fetch-tvshow';
 import TvShowDetails from 'libs/watchworthy/src/lib/TvShowDetails/TvShowDetails';
-import { TvShow as TvShowType } from 'types/common';
+import { TvShowEpisodeList } from 'libs/watchworthy/src/lib/TvShowEpisodeList';
+import { TvShowSeasonList } from 'libs/watchworthy/src/lib/TvShowSeasonList';
+import { useEffect, useState } from 'react';
+import { Episode, Season, TvShow as TvShowType } from 'types/common';
 interface TvShowProps {
   tvShow: TvShowType;
 }
@@ -14,27 +17,31 @@ export async function getServerSideProps(context) {
 }
 
 export const TvShow = ({ tvShow }) => {
-  // const [data, setData] = useState<MoviesQuery>({
-  //   data: [],
-  //   total: 0,
-  //   size: 0,
-  //   page: 0,
-  // });
-  // const [loading, setLoading] = useState(true);
+  const [seasonsLoading, setSeasonsLoading] = useState(true);
+  const [seasons, setSeasons] = useState<Season[]>([]);
+  const [episodes, setEpisodes] = useState<Episode[]>([]);
+  useEffect(() => {
+    const fetchShows = async () => {
+      console.log(tvShow.seasons);
+      try {
+        setSeasons(tvShow.seasons);
+        const episodes: any[] = [];
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const shows = await fetchMovies(0);
-  //       setData(shows);
-  //     } catch (error) {
-  //       console.error('Error fetching data:', error);
-  //     }
-  //   };
+        tvShow.seasons.forEach((season) => {
+          season.episodes.forEach((episode) => {
+            episodes.push(episode);
+          });
+        });
 
-  //   fetchData();
-  //   setLoading(false);
-  // }, []);
+        setEpisodes(episodes);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchShows();
+    setSeasonsLoading(false);
+  }, [tvShow]);
 
   return (
     <>
@@ -42,13 +49,18 @@ export const TvShow = ({ tvShow }) => {
       {tvShow.title} */}
       <TvShowDetails tvShow={tvShow} />
       <br />
-      {/* <CastCard /> */}
-      {/* <PersonMovieCard
-        type="movie"
-        isLoading={loading}
-        title="Test"
-        data={data}
-      /> */}
+      <TvShowSeasonList
+        type="season"
+        isLoading={seasonsLoading}
+        title="Seasons"
+        data={seasons}
+      />
+      <TvShowEpisodeList
+        type="episode"
+        isLoading={seasonsLoading}
+        title="Episodes"
+        data={episodes}
+      />
     </>
   );
 };
