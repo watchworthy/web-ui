@@ -1,4 +1,4 @@
-import { CastCard } from '@watchworthy/ui';
+import { ActorList, CastCard } from '@watchworthy/ui';
 import fetchMovie from 'api/fetch-movie';
 import MovieDetails from 'libs/watchworthy/src/lib/MovieDetails/MovieDetails';
 import { Movie as MovieType } from 'types/common';
@@ -21,7 +21,12 @@ export const Movie = ({ movie }) => {
       {movie.title} */}
       <MovieDetails movie={movie} />
       <br />
-      <CastCard />
+      <ActorList
+        type="people"
+        isLoading={movie == null}
+        title="Cast"
+        data={movie.people}
+      />
     </>
   );
 };

@@ -13,5 +13,6 @@ export * from './lib/TvShowList';
 export * from './lib/TvShowSeasonList';
 export * from './lib/EventCards/EventCards';
 export * from './lib/EventCards/EventCard.module.css'
+export * from './lib/ActorList'
 
 
