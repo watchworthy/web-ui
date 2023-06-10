@@ -1,20 +1,16 @@
 import { Card, Col, Divider } from 'antd';
 import { useRouter } from 'next/router';
-import { Season } from 'types/common';
+import { People } from 'types/common';
 
 const { Meta } = Card;
 
-interface TvShowSeasonListProps {
-  data: Season[];
+interface ActorListProps {
+  data: People[];
   isLoading: boolean;
   title: string;
   type: string;
 }
-export const TvShowSeasonList = ({
-  data,
-  title,
-  type,
-}: TvShowSeasonListProps) => {
+export const ActorList = ({ data, title, type }: ActorListProps) => {
   const router = useRouter();
 
   if (!data) return <div>Loading...</div>;
@@ -25,15 +21,18 @@ export const TvShowSeasonList = ({
       <Divider style={{ margin: '20px 0' }} />
       <div style={{ overflowX: 'auto', paddingBottom: '10px' }}>
         <div style={{ display: 'flex', gap: '15px' }}>
-          {data.map((season) => (
-            <Col key={season.id} xs={18} sm={8} md={4} lg={2}>
+          {data.map((person) => (
+            <Col key={person.id} xs={18} sm={8} md={4} lg={2}>
               <Card
-                onClick={() => router.push(`/${type}/${season.id}`)}
+                onClick={() => router.push(`/${type}/${person.id}`)}
                 hoverable
                 style={{ width: '100%', border: '#D9D9D9 solid 0.5px' }}
-                cover={<img alt="example" src={season.posterPath} />}
+                cover={<img alt="example" src={person.posterPath} />}
               >
-                <Meta title={season.name} description="Adventure" />
+                <Meta
+                  title={person.name}
+                  // description={`Season ${episode.seasonNumber}`}
+                />
               </Card>
             </Col>
           ))}

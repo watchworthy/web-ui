@@ -1,4 +1,5 @@
 import { Card, Col, Divider } from 'antd';
+import { useRouter } from 'next/router';
 import { Episode } from 'types/common';
 
 const { Meta } = Card;
@@ -14,6 +15,8 @@ export const TvShowEpisodeList = ({
   title,
   type,
 }: TvShowEpisodeListProps) => {
+  const router = useRouter();
+
   if (!data) return <div>Loading...</div>;
 
   return (
@@ -25,7 +28,7 @@ export const TvShowEpisodeList = ({
           {data.map((episode) => (
             <Col key={episode.id} xs={18} sm={8} md={4} lg={2}>
               <Card
-                // onClick={() => router.push(`/${type}/${episode.id}`)}
+                onClick={() => router.push(`/${type}/${episode.id}`)}
                 hoverable
                 style={{ width: '100%', border: '#D9D9D9 solid 0.5px' }}
                 cover={<img alt="example" src={episode.posterPath} />}

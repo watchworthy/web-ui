@@ -1,9 +1,10 @@
+import { ActorList } from '@watchworthy/ui';
 import fetchTvShow from 'api/fetch-tvshow';
 import TvShowDetails from 'libs/watchworthy/src/lib/TvShowDetails/TvShowDetails';
 import { TvShowEpisodeList } from 'libs/watchworthy/src/lib/TvShowEpisodeList';
 import { TvShowSeasonList } from 'libs/watchworthy/src/lib/TvShowSeasonList';
 import { useEffect, useState } from 'react';
-import { Episode, Season, TvShow as TvShowType } from 'types/common';
+import { Episode, People, Season, TvShow as TvShowType } from 'types/common';
 interface TvShowProps {
   tvShow: TvShowType;
 }
@@ -22,7 +23,6 @@ export const TvShow = ({ tvShow }) => {
   const [episodes, setEpisodes] = useState<Episode[]>([]);
   useEffect(() => {
     const fetchShows = async () => {
-      console.log(tvShow.seasons);
       try {
         setSeasons(tvShow.seasons);
         const episodes: any[] = [];
@@ -49,6 +49,12 @@ export const TvShow = ({ tvShow }) => {
       {tvShow.title} */}
       <TvShowDetails tvShow={tvShow} />
       <br />
+      <ActorList
+        type="people"
+        isLoading={tvShow == null}
+        title="Cast"
+        data={tvShow.people}
+      />
       <TvShowSeasonList
         type="season"
         isLoading={seasonsLoading}
