@@ -4,9 +4,12 @@ import { Pagination } from 'antd';
 import fetchPeople from 'api/fetch-all-people';
 import usePeopleQuery from 'hooks/use-all-people-query';
 import useDebounce from 'hooks/use-debounce';
+import { Search } from 'libs/watchworthy/src/lib/Search/Search';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { useRouter } from 'next/router';
 import { ParsedUrlQuery } from 'querystring';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { People as PeopleType } from 'types/common';
 
 const FIRST_PAGE = 1;
 const PAGE_SIZE = 20;
@@ -68,12 +71,28 @@ export const People = ({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [page, setPage] = useState(initialPage);
   const [search, setSearch] = useState(initialSearch);
+  const [selectedPeople, setSelectedPeople] = useState<PeopleType['id'][]>([]);
+  const router = useRouter();
   const user = useUser();
   const debouncedSearch = useDebounce(search, 500);
   const { data, isLoading, isFetching, isError } = usePeopleQuery(
     page,
     debouncedSearch
   );
+
+  const handleSearchChange = (value: string) => {
+    setSearch(value);
+    setPage(FIRST_PAGE);
+    setSelectedPeople([]);
+  };
+
+  useEffect(() => {
+    router.replace(
+      `people/?page=${page}${search ? `&search=${debouncedSearch}` : ''}`,
+      undefined,
+      { shallow: true }
+    );
+  }, [page, debouncedSearch]);
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -83,7 +102,25 @@ export const People = ({
 
   return (
     <>
-      <h1>People</h1>
+      <h1
+        style={{
+          display: 'flex',
+        }}
+      >
+        People
+      </h1>
+
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <Search
+          placeholder="Search for movies..."
+          onChange={(e) => handleSearchChange(e.target.value)}
+        />
+      </div>
       <PersonList data={data} isLoading={isLoading} />
       <div
         style={{

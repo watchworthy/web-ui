@@ -1,12 +1,17 @@
+import { DownOutlined } from '@ant-design/icons';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { TvShowList, useUser } from '@watchworthy/ui';
-import { Pagination } from 'antd';
+import { Dropdown, Pagination, Space, Typography } from 'antd';
 import fetchTvShows from 'api/fetch-all-tvshows';
+import fetchGenres from 'api/fetch-genres';
 import useTvShowsQuery from 'hooks/use-all-tvshows-query';
 import useDebounce from 'hooks/use-debounce';
+import { Search } from 'libs/watchworthy/src/lib/Search/Search';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { useRouter } from 'next/router';
 import { ParsedUrlQuery } from 'querystring';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { TvShow } from 'types/common';
 
 const FIRST_PAGE = 1;
 const PAGE_SIZE = 20;
@@ -31,16 +36,31 @@ const getInitialSearchFromQuery = (query: ParsedUrlQuery) => {
   return search;
 };
 
+const getInitialGenreFromQuery = (query: ParsedUrlQuery) => {
+  const genre = query.genre;
+
+  if (typeof genre !== 'string') {
+    return '';
+  }
+
+  return genre;
+};
+
 export const getServerSideProps: GetServerSideProps<{
   initialPage: number;
   initialSearch: string;
+  initialGenre: string;
 }> = async (ctx) => {
   const queryClient = new QueryClient();
 
   const page = getInitialPageFromQuery(ctx.query);
   const search = getInitialSearchFromQuery(ctx.query);
+  const genre = getInitialGenreFromQuery(ctx.query);
+
   const queryKey = ['tv', page, search];
-  await queryClient.prefetchQuery(queryKey, () => fetchTvShows(page, search));
+  await queryClient.prefetchQuery(queryKey, () =>
+    fetchTvShows(page, search, genre)
+  );
 
   const prefetchedQueryData = queryClient.getQueryData(queryKey);
 
@@ -49,6 +69,7 @@ export const getServerSideProps: GetServerSideProps<{
       props: {
         initialPage: FIRST_PAGE,
         initialSearch: '',
+        initialGenre: '',
       },
     };
   }
@@ -58,6 +79,7 @@ export const getServerSideProps: GetServerSideProps<{
       dehydratedState: dehydrate(queryClient),
       initialPage: page,
       initialSearch: search,
+      initialGenre: genre,
     },
   };
 };
@@ -65,15 +87,68 @@ export const getServerSideProps: GetServerSideProps<{
 export const TvShows = ({
   initialPage,
   initialSearch,
+  initialGenre,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [page, setPage] = useState(initialPage);
   const [search, setSearch] = useState(initialSearch);
-  const user = useUser();
+  const [genre, setGenre] = useState(initialGenre);
+  const router = useRouter();
   const debouncedSearch = useDebounce(search, 500);
+  const debouncedGenre = useDebounce(genre, 500);
+  const [selectedShows, setSelecetedShows] = useState<TvShow['id'][]>([]);
   const { data, isLoading, isFetching, isError } = useTvShowsQuery(
     page,
-    debouncedSearch
+    debouncedSearch,
+    debouncedGenre
   );
+  const [menuItems, setMenuItems] = useState<{ key: string; label: string }[]>(
+    []
+  );
+
+  const handleGenreClick = (e: any) => {
+    setGenre(e.key);
+    setSearch('');
+    setPage(FIRST_PAGE);
+    setSelecetedShows([]);
+  };
+
+  useEffect(() => {
+    async function getMenuItems() {
+      try {
+        const genres = await fetchGenres();
+        const transformedItems = [
+          { key: '0', label: 'All' },
+          ...genres.map((genre) => ({
+            key: genre.id.toString(),
+            label: genre.name,
+          })),
+        ];
+        setMenuItems(transformedItems);
+      } catch (error) {
+        console.error('Error fetching menu items:', error);
+      }
+    }
+
+    getMenuItems();
+  }, []);
+
+  const handleSearchChange = (value: string) => {
+    setSearch(value);
+    setPage(FIRST_PAGE);
+    setSelecetedShows([]);
+  };
+
+  useEffect(() => {
+    router.replace(
+      `tvshows/?page=${page}${
+        search || genre
+          ? `&search=${debouncedSearch}&genre=${debouncedGenre}`
+          : ''
+      }`,
+      undefined,
+      { shallow: true }
+    );
+  }, [page, debouncedSearch, debouncedGenre]);
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -83,7 +158,45 @@ export const TvShows = ({
 
   return (
     <>
-      <h1>Tv Shows</h1>
+      <h1
+        style={{
+          display: 'flex',
+        }}
+      >
+        Tv Shows
+      </h1>
+
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <Search
+          placeholder="Search for movies..."
+          onChange={(e) => handleSearchChange(e.target.value)}
+        />
+      </div>
+      <div
+        style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center' }}
+      >
+        <Dropdown
+          placement="bottomRight" // Set the placement to "bottomRight"
+          menu={{
+            items: menuItems,
+            selectable: true,
+            defaultSelectedKeys: ['3'],
+            onClick: handleGenreClick,
+          }}
+        >
+          <Typography.Link>
+            <Space>
+              Genre
+              <DownOutlined />
+            </Space>
+          </Typography.Link>
+        </Dropdown>
+      </div>
       <TvShowList data={data} isLoading={isLoading} />
       <div
         style={{

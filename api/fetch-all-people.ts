@@ -9,9 +9,9 @@ export interface PeopleQuery {
   data: People[];
 }
 
-export default async function fetchPeople(page: number, title?: string) {
+export default async function fetchPeople(page: number, name?: string) {
   const { data } = await api.get<PeopleQuery>(
-    `/person?size=24&page=${page}${title ? `&q=${title}` : ''}`
+    `/person?size=24&page=${page}${name ? `&q=${name}` : ''}`
   );
 
   return data;
