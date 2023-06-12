@@ -1,26 +1,44 @@
-import { AwardList } from 'libs/watchworthy/src/lib/AwardList';
 import fetchAwards from 'api/fetch-all-awards';
 import { AwardsQuery } from 'api/fetch-all-awards';
-import { GetServerSideProps } from 'next';
-interface AwardsProps {
-  awards: AwardsQuery;
-}
+import { Skeleton } from 'antd';
+import { useEffect, useState } from 'react';
 
-export const getServerSideProps: GetServerSideProps<AwardsProps> = async (
-  context: NextPageContext
-) => {
-  // Fetch the list of awards
-  const res = await fetchAwards();
-  const awards = await res;
 
-  return { props: { awards } };
-};
+const Awards = () => {
+  const [awards, setAwards] = useState<AwardsQuery | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-export const Awards = ({ awards }: AwardsProps) => {
+  useEffect(() => {
+    const fetchAwardsData = async () => {
+      try {
+        const response = await fetchAwards(1); 
+        setAwards(response);
+      } catch (error) {
+        console.error('Error fetching awards:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAwardsData();
+  }, []);
+
+  if (isLoading) {
+    return <Skeleton active />;
+  }
+
   return (
     <>
       <h1>Award List</h1>
-      <AwardList data={awards} isLoading={false} />
+      {awards?.data.map((award) => (
+        <div key={award.id}>
+          <h3>{award.name}</h3>
+          <p>Category: {award.category}</p>
+          <p>Winner: {award.winner ? 'Yes' : 'No'}</p>
+          <p>Year: {award.year}</p>
+          <p>Description: {award.description}</p>
+        </div>
+      ))}
     </>
   );
 };
