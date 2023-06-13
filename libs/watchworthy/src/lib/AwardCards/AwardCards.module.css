@@ -1,0 +1,19 @@
+
+
+.award-card {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+  }
+  
+  .award-card h2 {
+    font-size: 18px;
+    margin-bottom: 5px;
+  }
+  
+  .award-card p {
+    margin: 5px 0;
+  }
+  

@@ -1,46 +1,31 @@
-import fetchAwards from 'api/fetch-all-awards';
-import { AwardsQuery } from 'api/fetch-all-awards';
-import { Skeleton } from 'antd';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Award } from 'types/common';
+import AwardCards from 'libs/watchworthy/src/lib/AwardCards/AwardCards';
 
 
-const Awards = () => {
-  const [awards, setAwards] = useState<AwardsQuery | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+const AwardsPage: React.FC = () => {
+  const [awards, setAwards] = useState<Award[]>([]);
 
   useEffect(() => {
-    const fetchAwardsData = async () => {
+    const fetchAwards = async () => {
       try {
-        const response = await fetchAwards(1); 
-        setAwards(response);
+        const response = await axios.get('http://localhost:8081/award/list');
+        setAwards(response.data);
       } catch (error) {
         console.error('Error fetching awards:', error);
-      } finally {
-        setIsLoading(false);
       }
     };
 
-    fetchAwardsData();
+    fetchAwards();
   }, []);
 
-  if (isLoading) {
-    return <Skeleton active />;
-  }
-
   return (
-    <>
-      <h1>Award List</h1>
-      {awards?.data.map((award) => (
-        <div key={award.id}>
-          <h3>{award.name}</h3>
-          <p>Category: {award.category}</p>
-          <p>Winner: {award.winner ? 'Yes' : 'No'}</p>
-          <p>Year: {award.year}</p>
-          <p>Description: {award.description}</p>
-        </div>
-      ))}
-    </>
+    <div>
+      <h1>Awards</h1>
+      <AwardCards awards={awards} />
+    </div>
   );
 };
 
-export default Awards;
+export default AwardsPage;
