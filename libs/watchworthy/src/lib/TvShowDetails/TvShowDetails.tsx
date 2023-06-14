@@ -5,12 +5,14 @@ import { TvShow } from 'types/common';
 import { useUser } from '../hooks';
 import axios from 'axios';
 import { DeleteOutlined } from '@ant-design/icons';
+import { useRouter } from 'next/router';
 
 interface TvShowDetailsProps {
   tvShow: TvShow;
 }
   const TvShowDetails = ({ tvShow }: TvShowDetailsProps) => {
   const user = useUser();
+  const router = useRouter();
 
   const [averageRating, setAverageRating] = useState(null);
   const [getYourRateNum, setYourRateNum] = useState(null);
@@ -60,7 +62,7 @@ interface TvShowDetailsProps {
       const userRating = response.data;
       setRateNum(userRating);
       message.success('Tv Show rated successfully!');
-      window.location.reload();
+      router.replace(router.asPath);
     } catch (error) {
       console.error('Error rating Tv Show:', error);
     }
@@ -87,8 +89,9 @@ interface TvShowDetailsProps {
         data
       );
       message.success('You commented successfully!');
-      window.location.reload();
+      router.replace(router.asPath);
       console.log('Comment added successfully');
+      setCommentText("");
     } catch (error) {
       console.error('Error commenting in the movie:', error);
     }
@@ -99,7 +102,7 @@ interface TvShowDetailsProps {
     try {
       await axios.delete(`http://localhost:8081/tv/removecommenttvshows/${id}`);
       message.warning('Comment removed successfully !');
-      window.location.reload();
+      router.replace(router.asPath);
       console.log('Comment removed successfully');
     } catch (error) {
       console.error('Error removing comment ', error);

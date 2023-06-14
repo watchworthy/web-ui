@@ -9,6 +9,7 @@ import { Fragment, useEffect, useState } from 'react';
 import { Movie } from 'types/common';
 import { useUser } from '../hooks';
 import { DeleteOutlined } from '@ant-design/icons';
+import { useRouter } from 'next/router';
 
 const { Text } = Typography;
 
@@ -17,7 +18,7 @@ interface MovieDetailsProps {
 }
 const MovieDetails = ({ movie }: MovieDetailsProps) => {
   const user = useUser();
-
+  const router = useRouter();
   const addToWatchList = () => {
     const data = {
       userId: user.user?.id,
@@ -87,7 +88,7 @@ const MovieDetails = ({ movie }: MovieDetailsProps) => {
       const userRating = response.data;
       setRateNum(userRating);
       message.success('Movie rated successfully!');
-      window.location.reload();
+      router.replace(router.asPath);
     } catch (error) {
       console.error('Error rating movie:', error);
     }
@@ -110,8 +111,9 @@ const MovieDetails = ({ movie }: MovieDetailsProps) => {
         data
       );
       message.success('You commented successfully!');
-      window.location.reload();
+      router.replace(router.asPath);
       console.log('Comment added succesfully');
+      setCommentText("");
     } catch (error) {
       console.error('Error commenting in the movie:', error);
     }
@@ -121,7 +123,7 @@ const MovieDetails = ({ movie }: MovieDetailsProps) => {
     try {
       await axios.delete(`http://localhost:8081/movie/removecomment/${id}`);
       message.warning('Comment removed successfully !');
-      window.location.reload();
+      router.replace(router.asPath);
       console.log('Comment removed successfully');
     } catch (error) {
       console.error('Error removing comment ', error);
@@ -182,7 +184,7 @@ const MovieDetails = ({ movie }: MovieDetailsProps) => {
         `http://localhost:8081/commentlikes/likeComment/${commentId}/${user.user?.id}`
       );
       message.success('like added successfully!');
-      window.location.reload();
+      router.replace(router.asPath);
       console.log('Comment liked succesfully');
     } catch (error) {
       console.error('Error :', error);
@@ -195,7 +197,7 @@ const MovieDetails = ({ movie }: MovieDetailsProps) => {
         `http://localhost:8081/commentlikes/dissLikeComment/${commentId}/${user.user?.id}`
       );
       message.success('Disslike added successfully!');
-      window.location.reload();
+      router.replace(router.asPath);
       console.log('Comment Dissliked succesfully');
     } catch (error) {
       console.error('Error :', error);
