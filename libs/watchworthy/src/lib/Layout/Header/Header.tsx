@@ -36,8 +36,8 @@ export const Header = ({ toggleSidebar }: LayoutProps) => {
     {
       key: '2',
       label: (
-        <a rel="noopener noreferrer" href="#">
-          Help & Support
+        <a rel="noopener noreferrer" href="/accountsettings">
+          Account Settings
         </a>
       ),
     },
