@@ -7,6 +7,21 @@ export interface Movie {
   comments: Comment[];
   posterPath: string;
 }
+export interface Award {
+  id: number;
+  name: string;
+  category: string;
+  winner: boolean;
+  year: number;
+  description: string;
+  movie: Movie;
+  posterPath: string; 
+  movieName: string; 
+}
+
+
+
+
 
 export interface Comment {
   id: number;

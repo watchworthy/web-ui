@@ -1,5 +1,12 @@
-export const Awards = () => {
-  return <h1>Awards</h1>;
+import AwardCard from '../../libs/watchworthy/src/lib/AwardCards/AwardCards';
+
+const AwardsPage = () => {
+  return (
+    <div>
+      
+      <AwardCard />
+    </div>
+  );
 };
 
-export default Awards;
+export default AwardsPage;
