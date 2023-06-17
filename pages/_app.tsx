@@ -20,7 +20,7 @@ const App = ({ Component, pageProps }: AppProps) => {
   const router = useRouter();
 
   const LayoutComponent =
-    router.pathname === '/register' || router.pathname === '/login'
+    router.pathname === '/register' || router.pathname === '/login'  || router.pathname === '/forgot-password'  || router.pathname === '/reset-password'
       ? AuthLayout
       : Layout;
 
