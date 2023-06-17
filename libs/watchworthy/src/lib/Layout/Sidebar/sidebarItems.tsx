@@ -47,9 +47,9 @@ export const sidebarMenu = [
     path: '/popular',
   },
   {
-    label: 'Now Playing',
+    label: 'Recommendations',
     icon: <RightCircleOutlined />,
-    path: '/nowplaying',
+    path: '/recommendations',
   },
   {
     label: 'Upcoming',
