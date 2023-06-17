@@ -7,7 +7,7 @@ import {
   HeartOutlined,
 } from '@ant-design/icons';
 import { useUser } from '@watchworthy/ui';
-import { Avatar, Badge, Col, Dropdown, Layout, Menu, MenuProps, Row, Space } from 'antd';
+import { Avatar, Badge, Col, Dropdown, Layout, Menu, MenuProps, Row, Space, notification } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -30,9 +30,6 @@ export const Header = ({ toggleSidebar }: LayoutProps) => {
   const [collapsed, setCollapsed] = useState(true);
   const user = useUser();
   const router = useRouter();
-  useEffect(() => {
-    console.log(user.user);
-  });
   const items: MenuProps['items'] = [
     {
       key: '1',
@@ -50,14 +47,6 @@ export const Header = ({ toggleSidebar }: LayoutProps) => {
         </Link>
       ),
     },
-    // {
-    //   key: '3',
-    //   label: (
-    //     <a rel="noopener noreferrer" href="#">
-    //       Language
-    //     </a>
-    //   ),
-    // },
     {
       key: '4',
       danger: true,
@@ -81,13 +70,14 @@ export const Header = ({ toggleSidebar }: LayoutProps) => {
             setNotifications(data);
           }
         }
+        console.log(notifications);
       } catch (error) {
         console.error('Error fetching notifications:', error);
       }
     };
   
     fetchNotifications();
-  }, [user]);
+  }, [user.user]);
   
 
   const notificationMenu = (
