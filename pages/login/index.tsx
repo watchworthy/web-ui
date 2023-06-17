@@ -33,6 +33,10 @@ const LoginForm = () => {
         setLoading(false);
       });
   };
+  
+  const handleForgotPassword = () => {
+    router.push('/forgot-password');
+  };
 
   return (
     <div>
@@ -82,6 +86,9 @@ const LoginForm = () => {
           </Button>
         </Form.Item>
       </Form>
+      <Button type="link" onClick={handleForgotPassword}>
+        Forgot Password
+      </Button>
     </div>
   );
 };
