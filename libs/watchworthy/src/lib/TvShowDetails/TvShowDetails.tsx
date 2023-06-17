@@ -175,7 +175,7 @@ interface TvShowDetailsProps {
           <span>No rating available</span>
         )}
 
-        <span>Your Rate:</span>
+        <span>Your Rating: </span>
         {getYourRateNum !== null ? (
           <Rate disabled allowHalf defaultValue={getYourRateNum} />
         ) : (
