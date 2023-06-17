@@ -78,7 +78,6 @@ export const Header = ({ toggleSidebar }: LayoutProps) => {
   
     fetchNotifications();
   }, [user.user]);
-  
 
   const notificationMenu = (
     <Menu>
@@ -113,11 +112,6 @@ export const Header = ({ toggleSidebar }: LayoutProps) => {
               </Link>
             </div>
           </Col>
-          {/* <Col>
-            <div className={styles.search}>
-              <Search />
-            </div>
-          </Col> */}
           <Col>
             <div className={styles.thirdWrapper}>
               {user.user ? (

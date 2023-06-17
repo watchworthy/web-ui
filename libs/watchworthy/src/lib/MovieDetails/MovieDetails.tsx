@@ -72,7 +72,7 @@ const MovieDetails = ({ movie }: MovieDetailsProps) => {
     };
 
     findYourRateNum();
-  }, [movie, user]);
+  }, [movie, user.user]);
 
   const [rateNum, setRateNum] = useState(0);
 
