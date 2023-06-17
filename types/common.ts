@@ -6,6 +6,7 @@ export interface Movie {
   genres: Genre[];
   comments: Comment[];
   posterPath: string;
+  trailerId: string;
 }
 export interface Award {
   id: number;
@@ -19,10 +20,6 @@ export interface Award {
   movieName: string; 
 }
 
-
-
-
-
 export interface Comment {
   id: number;
   text: string;
@@ -35,15 +32,12 @@ export interface Genre {
   name: string;
 }
 
-
 export interface Event {
   id: number;
   name: string;
   date: string;
   posterPath: string;
 }
-
-
 
 export interface Info {
   total: number;
@@ -60,6 +54,7 @@ export interface TvShow {
   posterPath: string;
   genres: Genre[];
   comments: Comment[];
+  trailerId: string;
 }
 
 export interface TvShowInfo {
