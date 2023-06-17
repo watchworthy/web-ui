@@ -132,13 +132,19 @@ export const Header = ({ toggleSidebar }: LayoutProps) => {
             <div className={styles.thirdWrapper}>
               {user.user ? (
                 <>
-                  <Link href="/watchlist">Watch List</Link>
+                  <Link href="/watchlist" passHref>
+                    <Space>
+                      
+                      Watchlist
+                      <HeartOutlined />
+                    </Space>
+                  </Link>
                   
                   <Dropdown overlay={notificationMenu}>
                     <Space>
           <Badge count={notifications.length}>
             <a>
-              Notifications <BellOutlined/>
+              Notifications  <BellOutlined/>
             </a>
           </Badge>
           </Space>
