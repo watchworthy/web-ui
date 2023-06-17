@@ -35,7 +35,7 @@ const WatchList = () => {
     };
 
     fetchData();
-  }, [user]);
+  }, [user.user]);
 
   const removeMovieFromWatchlist = async (watchlistId: number) => {
     try {
