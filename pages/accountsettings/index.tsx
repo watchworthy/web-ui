@@ -21,9 +21,9 @@ const UserProfile: React.FC = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const emailValue = user.user?.email; 
-        if (emailValue) {
-          const response = await axios.get<User>(`http://localhost:8081/user/profile/${emailValue}`);
+        const usernameValue = user.user?.username; 
+        if (usernameValue) {
+          const response = await axios.get<User>(`http://localhost:8081/user/profile/${usernameValue}`);
           setProfile(response.data);
         } else {
           setProfile(null);

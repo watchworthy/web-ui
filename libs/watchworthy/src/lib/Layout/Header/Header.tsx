@@ -1,4 +1,5 @@
 import {
+  BellOutlined,
   DownOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -6,7 +7,7 @@ import {
   HeartOutlined,
 } from '@ant-design/icons';
 import { useUser } from '@watchworthy/ui';
-import { Avatar, Col, Dropdown, Layout, MenuProps, Row, Space } from 'antd';
+import { Avatar, Badge, Col, Dropdown, Layout, Menu, MenuProps, Row, Space } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -16,6 +17,13 @@ const { Header: HeaderLayout } = Layout;
 
 interface LayoutProps {
   toggleSidebar: (collapse: boolean) => void;
+}
+interface Notification {
+  id: number;
+  userId: number;
+  message: string;
+  dateTimeCreated: string;
+  read: boolean;
 }
 
 export const Header = ({ toggleSidebar }: LayoutProps) => {
@@ -61,6 +69,36 @@ export const Header = ({ toggleSidebar }: LayoutProps) => {
     },
   ];
 
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        if (user && user.user) {
+          const response = await fetch(`http://localhost:8081/notification/${user.user.id}`);
+          const data = await response.json();
+          if (Array.isArray(data)) {
+            setNotifications(data);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching notifications:', error);
+      }
+    };
+  
+    fetchNotifications();
+  }, [user]);
+  
+
+  const notificationMenu = (
+    <Menu>
+    {notifications.map((notification: Notification) => (
+      <Menu.Item key={notification.id}>
+        {notification.message}
+      </Menu.Item>
+    ))}
+  </Menu>
+  );
   return (
     <Layout>
       <HeaderLayout className={styles.header} role="banner">
@@ -94,13 +132,18 @@ export const Header = ({ toggleSidebar }: LayoutProps) => {
             <div className={styles.thirdWrapper}>
               {user.user ? (
                 <>
-                  <Link href="/watchlist" passHref>
+                  <Link href="/watchlist">Watch List</Link>
+                  
+                  <Dropdown overlay={notificationMenu}>
                     <Space>
-                      <HeartOutlined />
-                      Watchlist
-                    </Space>
-                  </Link>
-                  <div style={{ color: '#fff' }}>{user.user?.email}</div>
+          <Badge count={notifications.length}>
+            <a>
+              Notifications <BellOutlined/>
+            </a>
+          </Badge>
+          </Space>
+        </Dropdown>
+        <div style={{ color: '#fff' }}>{user.user?.email}</div>
                   <Dropdown menu={{ items }}>
                     <Space>
                       <a>

@@ -6,6 +6,7 @@ import { useUser } from '../hooks';
 import axios from 'axios';
 import { DeleteOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
+import { Trailer } from '../Trailer';
 
 interface TvShowDetailsProps {
   tvShow: TvShow;
@@ -160,6 +161,9 @@ interface TvShowDetailsProps {
                     ))}
                   </ul>
                 </div>
+                <div style={{paddingTop: '10px'}}>
+                  <Trailer trailerId={tvShow.trailerId}/>
+                </div>
               </Fragment>
             </>
           </Col>
@@ -175,7 +179,7 @@ interface TvShowDetailsProps {
           <span>No rating available</span>
         )}
 
-        <span>Your Rate:</span>
+        <span>Your Rating: </span>
         {getYourRateNum !== null ? (
           <Rate disabled allowHalf defaultValue={getYourRateNum} />
         ) : (

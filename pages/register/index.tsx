@@ -9,6 +9,7 @@ const SigninForm = () => {
   const router = useRouter();
   const [formValues, setFormValues] = useState({
     email: '',
+    username: '',
     firstName: '',
     lastName: '',
     password: '',
@@ -19,6 +20,7 @@ const SigninForm = () => {
     setLoading(true);
     const data = {
       email: values.email,
+      username: values.username,
       firstName: values.firstName,
       lastName: values.lastName,
       password: values.password,
@@ -62,6 +64,21 @@ const SigninForm = () => {
             placeholder="Email"
             onChange={(e) =>
               setFormValues({ ...formValues, email: e.target.value })
+            }
+          />
+        </Form.Item>
+
+        <Form.Item
+          name="username"
+          rules={[
+            { required: true, message: 'Please input your username!' },
+          ]}
+        >
+          <Input
+            size="large"
+            placeholder="Username"
+            onChange={(e) =>
+              setFormValues({ ...formValues, username: e.target.value })
             }
           />
         </Form.Item>
