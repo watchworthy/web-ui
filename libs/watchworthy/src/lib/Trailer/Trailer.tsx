@@ -24,7 +24,7 @@ export const Trailer = ({trailerId}: TrailerProps) => {
   return (
     <>
       <Button type="primary" onClick={showModal}>
-        Open Modal
+        Watch Trailer
       </Button>
       <Modal title="Trailer" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={1000}>
       <div className="video-responsive">
