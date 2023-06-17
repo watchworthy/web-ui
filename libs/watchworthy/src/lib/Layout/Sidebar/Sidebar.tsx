@@ -19,7 +19,7 @@ export const Sidebar = ({ collapsed = true }: SidebarProps) => {
       collapsible
       collapsed={collapsed}
     >
-      <Menu className={styles.menu} mode="inline" defaultSelectedKeys={['1']}>
+      <Menu className={styles.menu} mode="inline" defaultSelectedKeys={['0']}>
         {sidebarMenu.map((item, index) => {
           return (
             <Item key={index} icon={item.icon}>

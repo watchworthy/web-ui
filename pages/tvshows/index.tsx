@@ -173,7 +173,7 @@ export const TvShows = ({
         }}
       >
         <Search
-          placeholder="Search for shows..."
+          placeholder="Search Tv Shows..."
           onChange={(e) => handleSearchChange(e.target.value)}
         />
       </div>

@@ -117,7 +117,7 @@ export const People = ({
         }}
       >
         <Search
-          placeholder="Search for people..."
+          placeholder="Search People..."
           onChange={(e) => handleSearchChange(e.target.value)}
         />
       </div>

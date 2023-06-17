@@ -4,6 +4,7 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   UserOutlined,
+  HeartOutlined,
 } from '@ant-design/icons';
 import { useUser } from '@watchworthy/ui';
 import { Avatar, Badge, Col, Dropdown, Layout, Menu, MenuProps, Row, Space } from 'antd';
@@ -36,27 +37,27 @@ export const Header = ({ toggleSidebar }: LayoutProps) => {
     {
       key: '1',
       label: (
-        <a rel="noopener noreferrer" href="/profile">
+        <Link href="/profile" passHref>
           Profile Page
-        </a>
+        </Link>
       ),
     },
     {
       key: '2',
       label: (
-        <a rel="noopener noreferrer" href="/accountsettings">
+        <Link href="/accountsettings" passHref>
           Account Settings
-        </a>
+        </Link>
       ),
     },
-    {
-      key: '3',
-      label: (
-        <a rel="noopener noreferrer" href="#">
-          Language
-        </a>
-      ),
-    },
+    // {
+    //   key: '3',
+    //   label: (
+    //     <a rel="noopener noreferrer" href="#">
+    //       Language
+    //     </a>
+    //   ),
+    // },
     {
       key: '4',
       danger: true,
@@ -129,16 +130,21 @@ export const Header = ({ toggleSidebar }: LayoutProps) => {
           </Col> */}
           <Col>
             <div className={styles.thirdWrapper}>
-              <Link href="#">EN</Link>
               {user.user ? (
                 <>
-                  <Link href="/watchlist">Watch List</Link>
+                  <Link href="/watchlist" passHref>
+                    <Space>
+                      
+                      Watchlist
+                      <HeartOutlined />
+                    </Space>
+                  </Link>
                   
                   <Dropdown overlay={notificationMenu}>
                     <Space>
           <Badge count={notifications.length}>
             <a>
-              Notifications <BellOutlined/>
+              Notifications  <BellOutlined/>
             </a>
           </Badge>
           </Space>
@@ -155,8 +161,8 @@ export const Header = ({ toggleSidebar }: LayoutProps) => {
                 </>
               ) : (
                 <>
-                  {<Link href="/register">Register</Link>}
-                  {<Link href="/login">Login</Link>}
+                  <Link href="/register">Register</Link>
+                  <Link href="/login">Login</Link>
                   {/* {
                     <Link href="/profile"> 
                           <Avatar size="large" icon={<UserOutlined />} />   

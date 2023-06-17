@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { useWebSocket } from 'react-use-websocket/dist/lib/use-websocket';
 
-export const Community = () => {
+const Community = () => {
   const user = useUser();
   const [message, setMessage] = useState('');
   const [receivedMessages, setReceivedMessages] = useState([]);
@@ -43,73 +43,71 @@ export const Community = () => {
   }, [receivedMessages]);
 
   return (
-    <>
-      {/* <h1>Community</h1> */}
+    <div style={{ padding: '16px' }}>
       {!user.user ? (
-        <>
-          <Result
-            status="error"
-            title="You need to login to chat with the community"
-            subTitle="If you do not have an account, please register to continue."
-            extra={[
-              <Button
-                onClick={() => router.push('/register')}
-                type="primary"
-                key="register"
-              >
-                Register
-              </Button>,
-              <Button onClick={() => router.push('/login')} key="login">
-                Login
-              </Button>,
-            ]}
-          />
-        </>
-      ) : (
-        <>
-          {' '}
-          <div>
-            <div
-              ref={messagesContainerRef}
-              style={{
-                height: 700,
-                overflow: 'auto',
-                border: '1px solid #ccc',
-                padding: '3px',
-              }}
+        <Result
+          status="error"
+          title="You need to login to chat with the community"
+          subTitle="If you do not have an account, please register to continue."
+          extra={[
+            <Button
+              onClick={() => router.push('/register')}
+              type="primary"
+              key="register"
             >
-              <List
-                dataSource={receivedMessages}
-                renderItem={(item) => (
-                  <List.Item
-                    style={{
-                      background: '#fff',
-                      color: item ? '#1890ff' : '#000',
-                    }}
-                  >
-                    <>{item}</>
-                  </List.Item>
-                )}
-              />
-            </div>
-            <div style={{ display: 'flex', marginTop: 16 }}>
-              <Input
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Type a message..."
-              />
-              <Button
-                onClick={handleSendMessage}
-                type="primary"
-                style={{ marginLeft: 8 }}
-              >
-                Send
-              </Button>
-            </div>
+              Register
+            </Button>,
+            <Button onClick={() => router.push('/login')} key="login">
+              Login
+            </Button>,
+          ]}
+        />
+      ) : (
+        <div>
+          <div
+            ref={messagesContainerRef}
+            style={{
+              height: '500px',
+              overflow: 'auto',
+              border: '1px solid #ccc',
+              borderRadius: '4px',
+              padding: '8px',
+              marginBottom: '16px',
+            }}
+          >
+            <List
+              dataSource={receivedMessages}
+              renderItem={(item) => (
+                <List.Item
+                  style={{
+                    background: '#fff',
+                    color: item ? '#1890ff' : '#000',
+                    borderRadius: '4px',
+                  }}
+                >
+                  {item}
+                </List.Item>
+              )}
+            />
           </div>
-        </>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <Input
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="Type a message..."
+              style={{ marginRight: '8px' }}
+            />
+            <Button
+              onClick={handleSendMessage}
+              type="primary"
+              disabled={!message}
+            >
+              Send
+            </Button>
+          </div>
+        </div>
       )}
-    </>
+    </div>
   );
 };
 
