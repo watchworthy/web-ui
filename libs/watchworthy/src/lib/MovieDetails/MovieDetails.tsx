@@ -10,6 +10,7 @@ import { Movie } from 'types/common';
 import { useUser } from '../hooks';
 import { DeleteOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
+import { Trailer } from '../Trailer';
 
 const { Text } = Typography;
 
@@ -253,6 +254,9 @@ const MovieDetails = ({ movie }: MovieDetailsProps) => {
                       <li key={genre.id}>{genre.name}</li>
                     ))}
                   </ul>
+                </div>
+                <div style={{paddingTop: '10px'}}>
+                <Trailer trailerId={movie.trailerId}/>
                 </div>
               </Fragment>
             </>

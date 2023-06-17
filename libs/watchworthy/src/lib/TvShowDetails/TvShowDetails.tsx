@@ -6,6 +6,7 @@ import { useUser } from '../hooks';
 import axios from 'axios';
 import { DeleteOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
+import { Trailer } from '../Trailer';
 
 interface TvShowDetailsProps {
   tvShow: TvShow;
@@ -159,6 +160,9 @@ interface TvShowDetailsProps {
                       <li key={genre.id}>{genre.name}</li>
                     ))}
                   </ul>
+                </div>
+                <div style={{paddingTop: '10px'}}>
+                  <Trailer trailerId={tvShow.trailerId}/>
                 </div>
               </Fragment>
             </>
