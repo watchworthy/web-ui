@@ -14,6 +14,26 @@ interface TvShowDetailsProps {
   const TvShowDetails = ({ tvShow }: TvShowDetailsProps) => {
   const user = useUser();
   const router = useRouter();
+  const addTvShowToWatchList = () => {
+    const data = {
+      userId: user.user?.id,
+      tvShowId: tvShow.id,
+    };
+
+    axios
+      .post(
+        `http://localhost:8081/tv/gettvshowswatchlistbyuserid/${user.user?.id}/${tvShow.id}`
+      )
+      .then(() => {
+        message.success('Tv Show added to watchlist successfully!');
+      })
+      .catch((error) => {
+        message.error(
+          'You have already added this Tv Show to your watchlist',
+          error
+        );
+      });
+  };
 
   const [averageRating, setAverageRating] = useState(null);
   const [getYourRateNum, setYourRateNum] = useState(null);
@@ -167,6 +187,7 @@ interface TvShowDetailsProps {
               </Fragment>
             </>
           </Col>
+          <Button onClick={addTvShowToWatchList}>AddToWatchList</Button>
         </Row>
       </div>
 
@@ -216,6 +237,7 @@ interface TvShowDetailsProps {
                   onClick={() => removeCommentTvShow(comment.id)}
               />
             </List.Item>
+            
           )}
         />
   
