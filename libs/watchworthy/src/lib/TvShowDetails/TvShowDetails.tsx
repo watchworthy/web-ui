@@ -14,6 +14,7 @@ interface TvShowDetailsProps {
   const TvShowDetails = ({ tvShow }: TvShowDetailsProps) => {
   const user = useUser();
   const router = useRouter();
+  
   const addTvShowToWatchList = () => {
     const data = {
       userId: user.user?.id,
