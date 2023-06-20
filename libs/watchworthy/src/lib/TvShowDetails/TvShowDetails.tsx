@@ -18,6 +18,9 @@ interface TvShowDetailsProps {
   const [averageRating, setAverageRating] = useState(null);
   const [getYourRateNum, setYourRateNum] = useState(null);
 
+  const [genres, setGenres] = useState<TvShowGenre[]>([]);
+
+
   useEffect(() => {
     const fetchAverageRating = async () => {
       try {
@@ -29,7 +32,16 @@ interface TvShowDetailsProps {
         console.error('Error fetching average rating:', error);
       }
     };
+    const fetchGenres = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8081/tv/${tvShow.id}/genres`);
+        setGenres(response.data);
+      } catch (error) {
+        console.error('Failed to fetch genres:', error);
+      }
+    };
 
+    fetchGenres();
     fetchAverageRating();
   }, [tvShow]);
 
@@ -69,11 +81,6 @@ interface TvShowDetailsProps {
     }
   };
 
-
-
-
-
-
   const [commentText, setCommentText] = useState('');
 
   const handleCommentTextChange = (e: any) => {
@@ -110,16 +117,6 @@ interface TvShowDetailsProps {
     }
   };
 
-  const genres = [
-    {
-      id: 1,
-      name: 'Action',
-    },
-    {
-      id: 2,
-      name: 'Adventure',
-    },
-  ];
 
 
   return (
@@ -156,7 +153,7 @@ interface TvShowDetailsProps {
                   <br />
                   <h3>Genres</h3>
                   <ul>
-                  {tvShow.genres.map((genre) => (
+                  {genres.map((genre) => (
                       <li key={genre.id}>{genre.name}</li>
                     ))}
                   </ul>

@@ -1,6 +1,8 @@
 import { Card, Col, Divider, Row } from 'antd';
 import { TvShowsQuery } from 'api/fetch-all-tvshows';
+import axios from 'axios';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 const { Meta } = Card;
 
 interface TvShowListProps {
@@ -10,6 +12,21 @@ interface TvShowListProps {
 
 export const TvShowList = ({ data, isLoading }: TvShowListProps) => {
   const router = useRouter();
+  const [genres, setGenres] = useState<{ name: string }[]>([]);
+
+  useEffect(() => {
+    const fetchGenres = async () => {
+      try {
+        const response = await axios.get('http://localhost:8081/genre');
+        setGenres(response.data);
+      } catch (error) {
+        console.error('Failed to fetch genres:', error);
+      }
+    };
+
+    fetchGenres();
+  }, []);
+
   const renderGenres = (genres: { name: string }[]) => {
     if (genres.length > 2) {
       const displayedGenres = genres.slice(0, 2).map((genre) => genre.name);
@@ -38,8 +55,8 @@ export const TvShowList = ({ data, isLoading }: TvShowListProps) => {
               <Meta
                 title={tvshow.title}
                 description={
-                  tvshow.genres.length > 0
-                    ? renderGenres(tvshow.genres)
+                  genres.length > 0
+                    ? renderGenres(genres)
                     : 'Action'
                 }
               />
