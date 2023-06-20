@@ -32,6 +32,13 @@ export interface Genre {
   name: string;
 }
 
+export interface TvShowGenre {
+  id: number;
+  name: string;
+  tvShowId: number;
+  genreId: number;
+}
+
 export interface Event {
   id: number;
   name: string;
