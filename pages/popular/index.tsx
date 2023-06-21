@@ -1,6 +1,7 @@
-import { Button, Card, Col, Divider, Row, message, Spin } from 'antd';
+import {  Card, Col, Divider, Row, Spin } from 'antd';
 import axios from 'axios';
 import { useUser } from 'libs/watchworthy/src/lib/hooks';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
@@ -14,14 +15,10 @@ interface Movie {
 }
 
 const Popular = () => {
-  const user = useUser();
   const router = useRouter();
   const [popularMovies, setPopularMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const data = {
-    userId: user.user?.id,
-  };
   useEffect(() => {
     const fetchData = async () => {
       try {

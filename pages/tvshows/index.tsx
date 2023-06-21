@@ -1,6 +1,6 @@
 import { DownOutlined } from '@ant-design/icons';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
-import { TvShowList, useUser } from '@watchworthy/ui';
+import { TvShowList } from '@watchworthy/ui';
 import { Dropdown, Pagination, Space, Typography } from 'antd';
 import fetchTvShows from 'api/fetch-all-tvshows';
 import fetchGenres from 'api/fetch-genres';
@@ -14,7 +14,7 @@ import { useEffect, useState } from 'react';
 import { TvShow } from 'types/common';
 
 const FIRST_PAGE = 1;
-const PAGE_SIZE = 20;
+// const PAGE_SIZE = 20;
 
 const getInitialPageFromQuery = (query: ParsedUrlQuery) => {
   const page = Number(query.page);
@@ -96,11 +96,12 @@ export const TvShows = ({
   const debouncedSearch = useDebounce(search, 500);
   const debouncedGenre = useDebounce(genre, 500);
   const [selectedShows, setSelecetedShows] = useState<TvShow['id'][]>([]);
-  const { data, isLoading, isFetching, isError } = useTvShowsQuery(
+  const { data, isLoading, isError } = useTvShowsQuery(
     page,
     debouncedSearch,
     debouncedGenre
   );
+  
   const [menuItems, setMenuItems] = useState<{ key: string; label: string }[]>(
     []
   );

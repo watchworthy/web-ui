@@ -1,6 +1,6 @@
-import { Button, Card, Col, Divider, Row, message, Spin } from 'antd';
+import { Card, Col, Divider, Row, Spin } from 'antd';
 import axios from 'axios';
-import { useUser } from 'libs/watchworthy/src/lib/hooks';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
@@ -14,7 +14,6 @@ interface Movie {
 }
 
 const Upcoming = () => {
-  const user = useUser();
   const router = useRouter();
   const [upComingMovies, setUpComingMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
@@ -51,7 +50,7 @@ const Upcoming = () => {
                 onClick={() => router.push(`/movie/${movie.id}`)}
                 hoverable
                 style={{ width: '100%', border: '#D9D9D9 solid 0.5px' }}
-                cover={<img alt="example" src={movie.posterPath} />}
+                cover={<img alt="example" src={movie.posterPath}/>}
               >
                 <div style={{ padding: '8px' }}>
                   <h3 style={{ fontWeight: 'bold', marginBottom: '8px' }}>{movie.title}</h3>

@@ -21,7 +21,7 @@ const ResetPasswordForm = () => {
 
     axios
       .post(RESET_ENDPOINT, data)
-      .then((response) => {
+      .then(() => {
         message.success('Reset password successfully, please login!');
         router.push('/login');
       })

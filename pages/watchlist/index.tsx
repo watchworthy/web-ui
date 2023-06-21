@@ -18,9 +18,7 @@ const WatchList = () => {
   const router = useRouter();
   const [watchlist, setWatchlist] = useState<Movie[]>([]);
 
-  const data = {
-    userId: user.user?.id,
-  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -43,6 +41,8 @@ const WatchList = () => {
         `http://localhost:8081/movie/removemoviefromwatchlist/${watchlistId}`
       );
       message.warning('Movie removed from watchlist successfully!');
+
+      setWatchlist(prevWatchlist => prevWatchlist.filter(movie => movie.watchlistId !== watchlistId));
 
       console.log('Movie removed from watchlist successfully');
     } catch (error) {

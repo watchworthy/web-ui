@@ -4,18 +4,27 @@ import fetchTvShowsByPerson from 'api/fetch-all-tvshows-by-person';
 import fetchPerson from 'api/fetch-person';
 import PeopleDetails from 'libs/watchworthy/src/lib/PeopleDetails/PeopleDetails';
 import { PersonTvShowCard } from 'libs/watchworthy/src/lib/PersonTvShowCard';
+import { GetServerSidePropsContext } from 'next';
 import { useEffect, useState } from 'react';
-import { Movie as MovieType, TvShow } from 'types/common';
+import { Movie as MovieType, People as PeopleType, TvShow } from 'types/common';
 
-export async function getServerSideProps(context) {
-  // Fetch movie data for the specific id
+interface PeopleProps {
+  person: PeopleType;
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  if (!context.params || typeof context.params.people !== 'string') {
+    return {
+      notFound: true,
+    };
+  }
   const res = await fetchPerson(context.params.people);
   const person = await res;
 
   return { props: { person } };
 }
 
-export const Movie = ({ person }) => {
+export const People = ({ person }: PeopleProps) => {
   const [data, setData] = useState<MovieType[]>([]);
   const [loading, setLoading] = useState(true);
   const [showsLoading, setShowsLoading] = useState(true);
@@ -67,4 +76,4 @@ export const Movie = ({ person }) => {
   );
 };
 
-export default Movie;
+export default People;

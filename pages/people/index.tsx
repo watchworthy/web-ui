@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
 import { People as PeopleType } from 'types/common';
 
 const FIRST_PAGE = 1;
-const PAGE_SIZE = 20;
+// const PAGE_SIZE = 20;
 
 const getInitialPageFromQuery = (query: ParsedUrlQuery) => {
   const page = Number(query.page);
@@ -73,9 +73,8 @@ export const People = ({
   const [search, setSearch] = useState(initialSearch);
   const [selectedPeople, setSelectedPeople] = useState<PeopleType['id'][]>([]);
   const router = useRouter();
-  const user = useUser();
   const debouncedSearch = useDebounce(search, 500);
-  const { data, isLoading, isFetching, isError } = usePeopleQuery(
+  const { data, isLoading, isError } = usePeopleQuery(
     page,
     debouncedSearch
   );

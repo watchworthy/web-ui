@@ -14,7 +14,7 @@ import { useEffect, useState } from 'react';
 import { Movie } from 'types/common';
 
 const FIRST_PAGE = 1;
-const PAGE_SIZE = 20;
+// const PAGE_SIZE = 20;
 
 const getInitialPageFromQuery = (query: ParsedUrlQuery) => {
   const page = Number(query.page);
@@ -92,12 +92,11 @@ export const Movies = ({
   const [page, setPage] = useState(initialPage);
   const [search, setSearch] = useState(initialSearch);
   const [genre, setGenre] = useState(initialGenre);
-  const user = useUser();
   const debouncedSearch = useDebounce(search, 500);
   const debouncedGenre = useDebounce(genre, 500);
   const router = useRouter();
-  const [selectedMovies, setSelectedMovies] = useState<Movie['id'][]>([]);
-  const { data, isLoading, isFetching, isError } = useMoviesQuery(
+  const [ selectedMovies, setSelectedMovies] = useState<Movie['id'][]>([]);
+  const { data, isLoading, isError } = useMoviesQuery(
     page,
     debouncedSearch,
     genre

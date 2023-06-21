@@ -1,5 +1,6 @@
 import {
   DislikeOutlined,
+  HeartOutlined,
   LikeOutlined,
 } from '@ant-design/icons';
 import { Button, Col, Input, List, Rate, Row, Typography, message } from 'antd';
@@ -255,13 +256,18 @@ const MovieDetails = ({ movie }: MovieDetailsProps) => {
                     ))}
                   </ul>
                 </div>
-                <div style={{paddingTop: '10px'}}>
-                <Trailer trailerId={movie.trailerId}/>
-                </div>
+                <div style={{ paddingTop: '10px', display: 'flex', gap: '10px' }}>
+                  <Trailer trailerId={movie.trailerId} />
+                  <Button type="dashed"
+                    onClick={addToWatchList}
+                    >
+                    Add To WatchList
+                    <HeartOutlined />
+                  </Button>
+                </div>  
               </Fragment>
             </>
           </Col>
-          <Button onClick={addToWatchList}>AddToWatchList</Button>
         </Row>
       </div>
       <div className="movie__info-content">

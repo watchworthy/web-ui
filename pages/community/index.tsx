@@ -8,7 +8,7 @@ import { useWebSocket } from 'react-use-websocket/dist/lib/use-websocket';
 const Community = () => {
   const user = useUser();
   const [message, setMessage] = useState('');
-  const [receivedMessages, setReceivedMessages] = useState([]);
+  const [receivedMessages, setReceivedMessages] = useState<string[]>([]);
   const { sendMessage, lastMessage } = useWebSocket('ws://localhost:8081/chat');
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -30,12 +30,11 @@ const Community = () => {
   useEffect(() => {
     if (lastMessage !== null) {
       const parsedMessage = lastMessage.data;
-      setReceivedMessages((prevMessages) => [...prevMessages, parsedMessage]);
+      setReceivedMessages((prevMessages: string[]) => [...prevMessages, parsedMessage]);
     }
   }, [lastMessage]);
-
+  
   useEffect(() => {
-    // Scroll to the bottom of the messages container whenever new messages are added
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop =
         messagesContainerRef.current.scrollHeight;

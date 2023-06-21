@@ -12,6 +12,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import styles from './Header.module.less';
+import Head from 'next/head';
 
 const { Header: HeaderLayout } = Layout;
 
@@ -30,6 +31,60 @@ export const Header = ({ toggleSidebar }: LayoutProps) => {
   const [collapsed, setCollapsed] = useState(true);
   const user = useUser();
   const router = useRouter();
+
+  const { pathname } = router;
+
+  let pageTitle = '';
+
+  switch (pathname) {
+    case '/':
+      pageTitle = 'WatchWorthy - Home';
+      break;
+    case '/movies':
+      pageTitle = 'WatchWorthy - Movies';
+      break;
+    case '/tvshows':
+      pageTitle = 'WatchWorthy - TV Shows';
+      break;
+    case '/people':
+      pageTitle = 'WatchWorthy - People';
+      break;
+    case '/awards':
+      pageTitle = 'WatchWorthy - Awards';
+      break;
+    case '/events':
+      pageTitle = 'WatchWorthy - Events';
+      break;
+    case '/recommendations':
+      pageTitle = 'WatchWorthy - Recommendations';
+      break;
+    case '/watchlist':
+      pageTitle = 'WatchWorthy - Watchlist';
+      break;
+    case '/popular':
+      pageTitle = 'WatchWorthy - Popular';
+      break;
+    case '/upcoming':
+      pageTitle = 'WatchWorthy - Upcoming';
+      break;
+    case '/community':
+      pageTitle = 'WatchWorthy - Community';
+      break;
+    case '/login':
+      pageTitle = 'WatchWorthy - Login';
+      break;
+    case '/sign-up':
+      pageTitle = 'WatchWorthy - Sign Up';
+      break;
+    case '/reset-password':
+      pageTitle = 'WatchWorthy - Reset Password';
+      break;
+    default:
+      pageTitle = 'WatchWorthy - Movies';
+      break;
+  }
+
+  
   const items: MenuProps['items'] = [
     {
       key: '1',
@@ -90,6 +145,9 @@ export const Header = ({ toggleSidebar }: LayoutProps) => {
   );
   return (
     <Layout>
+       <Head>
+        <title>{pageTitle}</title>
+      </Head>
       <HeaderLayout className={styles.header} role="banner">
         <Row role="banner" className={styles.headerContent}>
           <Col>

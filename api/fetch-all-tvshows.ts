@@ -10,7 +10,7 @@ export interface TvShowsQuery {
 }
 
 export default async function fetchTvShows(page: number, title?: string, genre?:string) {
-  const { data } = await api.get<TvShow>(
+  const { data } = await api.get<TvShowsQuery>(
     `/tv?size=24&page=${page}${title ? `&q=${title}` : ''}${
       genre ? `&genre=${genre}` : ''
     }`

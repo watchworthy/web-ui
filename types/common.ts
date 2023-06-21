@@ -7,6 +7,7 @@ export interface Movie {
   comments: Comment[];
   posterPath: string;
   trailerId: string;
+  people: People[];
 }
 export interface Award {
   id: number;
@@ -103,4 +104,10 @@ export interface Episode {
   releaseDate: string;
   posterPath: string;
   seasonNumber: number;
+}
+
+export interface TvShowPeople {
+  id: number;
+  tvShowId: number;
+  person: People;
 }

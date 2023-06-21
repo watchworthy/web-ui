@@ -23,7 +23,7 @@ const LoginForm = () => {
         const token = response.data;
         message.success('Successfully logged in!');
         localStorage.setItem('token', token);
-        router.push('/');
+        router.push('http://localhost:3000');
       })
       .catch((error) => {
         message.success('Something went wrong!');

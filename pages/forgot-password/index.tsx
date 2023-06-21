@@ -5,7 +5,6 @@ import { useState } from 'react';
 
 const ForgotPasswordForm = () => {
   const [formValues, setFormValues] = useState({ email: '' });
-  const router = useRouter();
 
   const [loading, setLoading] = useState(false);
 
@@ -20,7 +19,6 @@ const ForgotPasswordForm = () => {
       .then((response) => {
         const token = response.data;
         message.success('Reset email send!');
-        // router.push('/');
       })
       .catch((error) => {
         message.success('Something went wrong!');

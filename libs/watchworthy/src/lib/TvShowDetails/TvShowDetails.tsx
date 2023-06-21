@@ -1,7 +1,7 @@
 import { Button, Col, Input, List, Rate, Row, message } from 'antd';
 import moment from 'moment';
 import { Fragment, useEffect, useState } from 'react';
-import { TvShow } from 'types/common';
+import { Comment, TvShow, TvShowGenre } from 'types/common';
 import { useUser } from '../hooks';
 import axios from 'axios';
 import { DeleteOutlined } from '@ant-design/icons';
@@ -17,6 +17,7 @@ interface TvShowDetailsProps {
 
   const [averageRating, setAverageRating] = useState(null);
   const [getYourRateNum, setYourRateNum] = useState(null);
+  const [comments,setComments] = useState<Comment[]>([]);
 
   const [genres, setGenres] = useState<TvShowGenre[]>([]);
 
@@ -46,6 +47,11 @@ interface TvShowDetailsProps {
   }, [tvShow]);
 
   useEffect(() => {
+    const fetchComments = async () => {
+      let comments = await axios.get(`http://localhost:8081/tv/${tvShow.id}/comments`);
+      setComments(comments.data);
+    }
+
     const findYourRateNum = async () => {
       try {
         const response = await axios.get(
@@ -56,9 +62,9 @@ interface TvShowDetailsProps {
         console.error('Error fetching average rating:', error);
       }
     };
-
+    fetchComments();
     findYourRateNum();
-  }, [tvShow, user]);
+  }, [tvShow, user.user,comments == null]);
 
   const [rateNum, setRateNum] = useState(0);
 
@@ -194,7 +200,7 @@ interface TvShowDetailsProps {
         <h1>Comments</h1>
         <hr />
         <List
-          dataSource={tvShow.comments}
+          dataSource={comments}
           renderItem={(comment) => (
             <List.Item className="commentItem">
               <List.Item.Meta

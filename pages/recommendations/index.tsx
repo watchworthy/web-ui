@@ -22,7 +22,7 @@ const Recommendations: React.FC<RecommendationsProps> = () => {
   const [genres, setGenres] = useState<Genre[]>([]);
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const [modalText, setModalText] = useState('Content of the modal');
+  const [modalText, setModalText] = useState('Select one or more genres');
   const [selectedGenres, setSelectedGenres] = useState<number[]>([]);
   const router = useRouter();
   const showModal = () => {
