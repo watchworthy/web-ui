@@ -1,4 +1,5 @@
 import {
+  BellOutlined,
   CalendarOutlined,
   CommentOutlined,
   PlayCircleOutlined,
@@ -35,6 +36,16 @@ export const sidebarMenu = [
     label: 'People',
     icon: <TeamOutlined />,
     path: '/people',
+  },
+  {
+    label: 'TestParent',
+    icon: <BellOutlined />,
+    path: '/testparent',
+  },
+  {
+    label: 'TestChild',
+    icon: <BellOutlined />,
+    path: '/testchild',
   },
   {
     label: 'Community',
