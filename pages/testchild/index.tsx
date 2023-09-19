@@ -10,7 +10,7 @@ const TestChild: React.FC = () => {
   const [isCreateModalVisible, setCreateModalVisible] = useState(false);
   const [newTestChild, setNewTestChild] = useState({ name: '', parent_id: '' });
   const [isEditModalVisible, setEditModalVisible] = useState(false);
-  const [editedTestChild, setEditedTestChild] = useState({ id: '', name: '', testParentId: '' });
+  const [editedTestChild, setEditedTestChild] = useState({ id: '', name: '', testParentE_id: '' });
   const [testParents, setTestParents] = useState<any[]>([]);
 
   useEffect(() => {
@@ -39,16 +39,15 @@ const TestChild: React.FC = () => {
   const handleCreate = () => {
     // Send a POST request to create a new test child
     axios
-      .post('http://localhost:8081/testchild', newTestChild)
-      .then((response) => {
-        // Handle success, maybe refresh the data or close the modal
-        // You can also update the data array with the newly created record.
-        setCreateModalVisible(false);
-        setData([...data, response.data]);
-      })
-      .catch((error) => {
-        console.error('Error creating test child:', error);
-      });
+    .post('http://localhost:8081/testchild', newTestChild)
+    .then((response) => {
+      // Handle success
+      setCreateModalVisible(false);
+      setData([...data, response.data]);
+    })
+    .catch((error) => {
+      console.error('Error creating test child:', error);
+    });
   };
 
   const handleEdit = () => {
@@ -56,7 +55,7 @@ const TestChild: React.FC = () => {
     axios
       .put(`http://localhost:8081/testchild/${editedTestChild.id}`, {
         name: editedTestChild.name,
-        testParentId: editedTestChild.testParentId,
+        testParentE_id: editedTestChild.testParentE_id, // Update to match your API
       })
       .then(() => {
         // Handle success, maybe refresh the data or close the modal
@@ -104,7 +103,7 @@ const TestChild: React.FC = () => {
     {
       title: 'Actions',
       key: 'actions',
-      render: (text: any, record: { id: any; name: any; testParentId: any }) => (
+      render: (text: any, record: { id: any; name: any; testParentE_id: any }) => (
         <>
           {editButton(record)}
           {deleteButton(record)}
@@ -119,14 +118,14 @@ const TestChild: React.FC = () => {
     </Button>
   );
 
-  const editButton = (record: { id: any; name: any; testParentId: any }) => (
+  const editButton = (record: { id: any; name: any; testParentE_id: any }) => (
     <Button
       onClick={() => {
         setEditModalVisible(true);
         setEditedTestChild({
           id: record.id, 
           name: record.name,
-          testParentId: record.testParentId,
+          testParentE_id: record.testParentE_id,
         });
       }}
     >
@@ -173,36 +172,36 @@ const TestChild: React.FC = () => {
         </Form>
       </Modal>
       <Modal
-        title="Edit Test Child"
-        visible={isEditModalVisible}
-        onOk={handleEdit}
-        onCancel={() => setEditModalVisible(false)}
-      >
-        <Form>
-          <Form.Item label="Name">
-            <Input
-              value={editedTestChild.name}
-              onChange={(e) =>
-                setEditedTestChild({ ...editedTestChild, name: e.target.value })
-              }
-            />
-          </Form.Item>
-          <Form.Item label="Test Parent">
-            <Select
-              value={editedTestChild.testParentId}
-              onChange={(value) =>
-                setEditedTestChild({ ...editedTestChild, testParentId: value })
-              }
-            >
-              {testParents.map((parent) => (
-                <Option key={parent.id} value={parent.id}>
-                  {parent.name}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
-        </Form>
-      </Modal>
+      title="Edit Test Child"
+      visible={isEditModalVisible}
+      onOk={handleEdit}
+      onCancel={() => setEditModalVisible(false)}
+    >
+      <Form>
+        <Form.Item label="Name">
+          <Input
+            value={editedTestChild.name}
+            onChange={(e) =>
+              setEditedTestChild({ ...editedTestChild, name: e.target.value })
+            }
+          />
+        </Form.Item>
+        <Form.Item label="Test Parent">
+          <Select
+            value={editedTestChild.testParentE_id}
+            onChange={(value) =>
+              setEditedTestChild({ ...editedTestChild, testParentE_id: value })
+            }
+          >
+            {testParents.map((parent) => (
+              <Option key={parent.id} value={parent.id}>
+                {parent.name}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
+      </Form>
+    </Modal>
     </div>
   );
 };
