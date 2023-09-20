@@ -112,9 +112,9 @@ const TestParent : React.FC = () => {
 
   return (
     <div>
-    <h1>Test Table</h1>
+    
     <Button type="primary" onClick={() => setCreateModalVisible(true)}>
-      Create Test Parent
+      Create Team
     </Button>
       <Table
         dataSource={data}

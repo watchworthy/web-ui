@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Modal, Form, Input, Row, Col, Card, Spin, Select } from 'antd';
+import { Table, Button, Modal, Form, Input, Select } from 'antd';
 import axios from 'axios';
 
 const { Option } = Select;
 
 const TestChild: React.FC = () => {
-  const [data, setData] = useState<any[]>([]); // Specify the type for your data
+  const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [isCreateModalVisible, setCreateModalVisible] = useState(false);
   const [newTestChild, setNewTestChild] = useState({ name: '', parent_id: '' });
   const [isEditModalVisible, setEditModalVisible] = useState(false);
   const [editedTestChild, setEditedTestChild] = useState({ id: '', name: '', testParentE_id: '' });
   const [testParents, setTestParents] = useState<any[]>([]);
+  const [filter, setFilter] = useState<string>('');
+  const [parentNameFilter, setParentNameFilter] = useState<string>('');
+
 
   useEffect(() => {
     // Fetch test parents' data from the API when the component mounts
@@ -23,9 +26,12 @@ const TestChild: React.FC = () => {
       .catch((error) => {
         console.error('Error fetching test parents:', error);
       });
-
+  
+    // Fetch test child data based on name and parentName filters
     axios
-      .get('http://localhost:8081/testchild')
+      .get(
+        `http://localhost:8081/testchild?name=${filter}&parentName=${parentNameFilter}`
+      )
       .then((response) => {
         setData(response.data);
         setLoading(false);
@@ -34,7 +40,41 @@ const TestChild: React.FC = () => {
         console.error('Error fetching data:', error);
         setLoading(false);
       });
-  }, [isCreateModalVisible]);
+  }, [isCreateModalVisible, filter, parentNameFilter]); // Include both filter and parentNameFilter in the dependencies array
+  
+
+
+  // ...
+
+// ...
+
+useEffect(() => {
+  // Fetch test parents' data from the API when the component mounts
+  axios
+    .get('http://localhost:8081/testparent')
+    .then((response) => {
+      setTestParents(response.data);
+    })
+    .catch((error) => {
+      console.error('Error fetching test parents:', error);
+    });
+
+  // Fetch test child data based on parent name filter
+  axios
+    .get(`http://localhost:8081/testchild?parentName=${filter}`)
+    .then((response) => {
+      setData(response.data);
+      setLoading(false);
+    })
+    .catch((error) => {
+      console.error('Error fetching data:', error);
+      setLoading(false);
+    });
+}, [isCreateModalVisible, filter]); // Include filter in the dependencies array
+
+// ...
+
+
 
   const handleCreate = () => {
     // Send a POST request to create a new test child
@@ -133,13 +173,33 @@ const TestChild: React.FC = () => {
     </Button>
   );
 
+  // Filter data based on the 'filter' state
+  // Filter data based on the 'filter' state
+const filteredData = data.filter((item) =>
+item.name && item.name.toLowerCase().includes(filter.toLowerCase())
+);
+
+
+
   return (
     <div>
-      <h1>Test Child</h1>
+      <h1>Player</h1>
+
+      <Input
+  placeholder="Filter by Parent Name"
+  value={parentNameFilter}
+  onChange={(e) => setParentNameFilter(e.target.value)}
+/>
+
+      <Input
+        placeholder="Filter by Name"
+        value={filter}
+        onChange={(e) => setFilter(e.target.value)}
+      />
       <Button type="primary" onClick={() => setCreateModalVisible(true)}>
-        Create Test Child
+        Create Player
       </Button>
-      <Table dataSource={data} columns={columns} loading={loading} />
+      <Table dataSource={filteredData} columns={columns} loading={loading} />
       <Modal
         title="Create Test Child"
         visible={isCreateModalVisible}
@@ -172,36 +232,36 @@ const TestChild: React.FC = () => {
         </Form>
       </Modal>
       <Modal
-      title="Edit Test Child"
-      visible={isEditModalVisible}
-      onOk={handleEdit}
-      onCancel={() => setEditModalVisible(false)}
-    >
-      <Form>
-        <Form.Item label="Name">
-          <Input
-            value={editedTestChild.name}
-            onChange={(e) =>
-              setEditedTestChild({ ...editedTestChild, name: e.target.value })
-            }
-          />
-        </Form.Item>
-        <Form.Item label="Test Parent">
-          <Select
-            value={editedTestChild.testParentE_id}
-            onChange={(value) =>
-              setEditedTestChild({ ...editedTestChild, testParentE_id: value })
-            }
-          >
-            {testParents.map((parent) => (
-              <Option key={parent.id} value={parent.id}>
-                {parent.name}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
-      </Form>
-    </Modal>
+        title="Edit Test Child"
+        visible={isEditModalVisible}
+        onOk={handleEdit}
+        onCancel={() => setEditModalVisible(false)}
+      >
+        <Form>
+          <Form.Item label="Name">
+            <Input
+              value={editedTestChild.name}
+              onChange={(e) =>
+                setEditedTestChild({ ...editedTestChild, name: e.target.value })
+              }
+            />
+          </Form.Item>
+          <Form.Item label="Test Parent">
+            <Select
+              value={editedTestChild.testParentE_id}
+              onChange={(value) =>
+                setEditedTestChild({ ...editedTestChild, testParentE_id: value })
+              }
+            >
+              {testParents.map((parent) => (
+                <Option key={parent.id} value={parent.id}>
+                  {parent.name}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 };
